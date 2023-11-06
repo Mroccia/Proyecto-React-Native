@@ -1,6 +1,6 @@
 import react, { Component } from 'react';
 import { auth } from '../../firebase/config';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image} from 'react-native';
 
 class Login extends Component {
     constructor(){
@@ -33,6 +33,10 @@ class Login extends Component {
     render(){
         return(
             <View style={styles.formContainer}>
+                <Image source={require('../../../assets/elperro.jpg')}
+                resizeMode= 'contain'
+                style={styles.imageLogo}
+                />
                 <Text>Login</Text>
                 <TextInput
                     style={styles.input}
@@ -87,7 +91,14 @@ const styles = StyleSheet.create({
     },
     textButton:{
         color: '#fff'
-    }
+    },
+    imageLogo: {
+        height: 200,
+        width: 1400,
+        marginTop: 10,
+        borderRadius: 100,
+        flex: 1,
+      }
 
 })
 

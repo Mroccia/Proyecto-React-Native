@@ -1,6 +1,6 @@
 import react, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image} from 'react-native';
 
 class Register extends Component {
     constructor(){
@@ -56,6 +56,12 @@ class Register extends Component {
     render(){
         return(
             <View style={styles.formContainer}>
+
+                <Image source={require('../../../assets/elgato.jpg')}
+                resizeMode= 'contain'
+                style={styles.imageLogo}
+                />
+
                 <Text>Register</Text>
                 <TextInput
                     style={styles.input}
@@ -117,7 +123,10 @@ const styles = StyleSheet.create({
     },
     textButton:{
         color: '#fff'
-    }
+    },
+    imageLogo: {
+            height: 200,
+      }
 
 })
 
