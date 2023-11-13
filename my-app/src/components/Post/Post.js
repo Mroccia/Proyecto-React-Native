@@ -1,4 +1,4 @@
-import react, { Component } from 'react';
+import React, { Component } from 'react';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
@@ -40,7 +40,7 @@ class Post extends Component {
 
    }
 
-   unLike(){
+   disLike(){
     //Quitar del array de likes al usario que está mirando el post.
     db.collection('posts').doc(this.props.infoPost.id).update({
         likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
@@ -66,7 +66,7 @@ class Post extends Component {
 
                 {/* If ternario */}
                 {this.state.like ? 
-                <TouchableOpacity onPress={()=>this.unLike()}>
+                <TouchableOpacity onPress={()=>this.disLike()}>
                     QuitarLike
                 </TouchableOpacity>
                 :

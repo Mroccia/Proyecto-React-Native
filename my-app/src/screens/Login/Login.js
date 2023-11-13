@@ -1,33 +1,26 @@
-import react, { Component } from 'react';
+import React, { Component } from 'react';
 import { auth } from '../../firebase/config';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image} from 'react-native';
 
 class Login extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state={
             email:'',
             password:''
         }
     }
 
-    login (email, pass){
-        auth.signInWithEmailAndPassword(email, pass)
-            .then( response => {
-                //Cuando firebase responde sin error
-                console.log('Login ok', response);
-
-                //Cambiar los estados a vacío como están al inicio.
-
-
-                //Redirigir al usuario a la home del sitio.
-                this.props.navigation.navigate('Home')
-
-            })
-            .catch( error => {
-                //Cuando Firebase responde con un error.
-                console.log(error);
-            })
+    login(){
+        this.state.email == '' || this.state.password == '' ? 
+        this.setState({requiredField: 'Debe completar el email y la contraseña para enviar este formulario.'})
+        :
+        auth.signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then( res => {
+            
+            this.props.navigation.navigate('Menu')
+        })
+        .catch(err => {this.setState({error: "Credenciales incorrectas"})})
     }
 
     render(){
@@ -53,10 +46,12 @@ class Login extends Component {
                     secureTextEntry={true}
                     value={this.state.password}
                 />
+                <Text style={styles.error}>{this.state.error}</Text>
+                <Text style={styles.error}>{this.state.requiredField}</Text>
                 <TouchableOpacity style={styles.button} onPress={()=>this.login(this.state.email, this.state.password)}>
                     <Text style={styles.textButton}>Ingresar</Text>    
                 </TouchableOpacity>
-                <TouchableOpacity onPress={ () => this.props.navigation.navigate('Registro')}>
+                <TouchableOpacity onPress={ () => this.props.navigation.navigate('Register')}>
                    <Text>No tengo cuenta. Registrarme.</Text>
                 </TouchableOpacity>
             </View>
