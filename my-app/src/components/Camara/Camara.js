@@ -1,8 +1,8 @@
-import { laCamara } from 'expo-camera'
-import { React, Component } from 'react'
+import { Camera } from 'expo-camera'
+import React, {Component} from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image, TextInput} from "react-native"
 import {StyleSheet} from 'react-native';
-import {db} from '../firebase/config';
+import {storage} from '../../firebase/config'
 
 class Camara extends Component {
 
@@ -11,14 +11,14 @@ class Camara extends Component {
         this.state = {
             mostraCamara: true,
             permisos: false,
-            url: ''
+            urlImg: ''
         }
         this.metodosDeCamara = undefined
     }
 
 
     componentDidMount() {
-        laCamara.requestCameraPermissionsAsync()
+        Camera.requestCameraPermissionsAsync()
           .then(()=>{
                this.setState({
                 permisos: true,
@@ -32,23 +32,26 @@ class Camara extends Component {
         this.metodosDeCamara.takePictureAsync()
          .then(photo => {
             this.setState({
-              url: photo.uri, 
-              showCamara:false
+                urlImg: photo.uri, 
+                showCamara:false
             })
         })
       }
 
       savePhoto(){
-        fetch(this.state.url)
+        fetch(this.state.urlImg)
          .then(res=>res.blob())
          .then(image =>{
-           const ref = db.ref(`photos/${Date.now()}.jpg`)
+           const ref = storage.ref(`photos/${Date.now()}.jpg`)
            ref.put(image)
                 .then(()=>{
                    ref.getDownloadURL()
                         .then(url => {
                             this.props.onImageUpload(url);
-                            
+                            //Borra la url temporal del estado.
+                            this.setState({
+                                urlImg: '',
+                            })
                         })
                  })
          })
@@ -68,29 +71,60 @@ class Camara extends Component {
         })
        }
        
-      
-    
-    render() {
+       render() {
         return (
-            <View style={styles.algo}>
-            
-            <laCamara
-            style={styles.cameraBody}
-            type={laCamara.Constants.Type.back}
-            ref={reference => this.camera = reference}
-            />
-            <TouchableOpacity 
-            style={styles.shootButton}
-            onPress={()=>this.takePicture()}>
-                <Text>Shoot</Text>
-                </TouchableOpacity>
+        <>
+            {this.state.permisos ?
+                
+                this.state.showCamera === false ?
+                <View style={styles.view}>
+                    <Image
+                    style={styles.camera}
+                    source={{uri: this.state.urlImg}}
+                    />
 
+                    <View>
+                        <TouchableOpacity onPress={() => {this.savePhoto() , this.stopCamera()}}>
+                            <Text>Usar esta imagen</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.borrarFoto()}>
+                            <Text>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>    
 
+                :
+
+                <View style={styles.view}>
+
+                    <Camera
+                    style={styles.camera}
+                    type={Camera.Constants.Type.front}
+                    ref = { (metodos) => this.cameraMethods = metodos }
+                    />
+
+                    <View style={styles.button}>
+
+                        <TouchableOpacity onPress={() => this.takePicture()}>
+                            <Text style={styles.field}>   Take a picture</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                </View>
+
+                : 
+
+                <Text>
+                    You don't have permission
+                </Text>
+
+            }
             
-    
-            </View>
-)}
-        }
+            </>
+            
+        )}
+}
 const styles = StyleSheet.create({
         container: {
             flex: 1,
