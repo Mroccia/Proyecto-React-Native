@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image} from 'react-native';
+import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
 
 class Register extends Component {
     constructor(){
@@ -55,6 +55,10 @@ class Register extends Component {
 
     render(){
         return(
+            <ImageBackground
+            source={require('../../../assets/National-Cheeseburger-Day.png')}
+                style={styles.background}
+                >
             <View style={styles.formContainer}>
 
                 <Image source={require('../../../assets/elgato.jpg')}
@@ -92,43 +96,53 @@ class Register extends Component {
                    <Text>Ya tengo cuenta. Ir al login</Text>
                 </TouchableOpacity>
             </View>
+            </ImageBackground>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    formContainer:{
-        paddingHorizontal:10,
-        marginTop: 20,
+    formContainer: {
+      paddingHorizontal: 20,
+      marginTop: 40,
+      alignItems: 'center',
     },
-    input:{
-        height:20,
-        paddingVertical:15,
-        paddingHorizontal: 10,
-        borderWidth:1,
-        borderColor: '#ccc',
-        borderStyle: 'solid',
-        borderRadius: 6,
-        marginVertical:10,
+    input: {
+      height: 40,
+      width: '100%',
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      borderWidth: 1,
+      borderColor: '#7289da', // Color de Riot Games
+      borderRadius: 8,
+      marginVertical: 15,
+      fontSize: 16,
     },
-    button:{
-        backgroundColor:'#28a745',
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        textAlign: 'center',
-        borderRadius:4, 
-        borderWidth:1,
-        borderStyle: 'solid',
-        borderColor: '#28a745'
+    button: {
+      backgroundColor: '#7289da', // Color de Riot Games
+      width: '100%',
+      paddingVertical: 15,
+      textAlign: 'center',
+      borderRadius: 8,
+      marginTop: 20,
     },
-    textButton:{
-        color: '#fff'
+    textButton: {
+      color: '#fff',
+      fontSize: 16,
     },
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+      },
     imageLogo: {
-            height: 200,
-      }
-
-})
+      height: 100,
+      width: 100,
+      marginTop: 20,
+      borderRadius: 50,
+    },
+  });
 
 
 export default Register;
