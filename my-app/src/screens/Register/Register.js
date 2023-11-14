@@ -26,30 +26,32 @@ class Register extends Component {
 
     }
 
-    register (email, pass, userName){
+    register(email, pass, userName) {
         auth.createUserWithEmailAndPassword(email, pass)
-            .then( response => {
-                //Cuando firebase responde sin error
-                console.log('Registrado ok', response);
-
-                 //Cambiar los estados a vacío como están al inicio.
-
-                 //Crear la colección Users
-                db.collection('users').add({
-                    owner: auth.currentUser.email,
-                    userName: userName,
-                    createdAt: Date.now(), 
-                })
-                .then( res => console.log(res))
-
-
+          .then(response => {
+            const user = response.user;
+            console.log('Registrado ok', user);
+      
+            // Crear la colección Users
+            db.collection('users').add({
+              owner: user.email,
+              userName: userName,
+              createdAt: Date.now(),
             })
-            .catch( error => {
-                //Cuando Firebase responde con un error
-                console.log(error);
-
-            })
-    }
+              .then(res => {
+                console.log(res);
+                // Redireccionar al usuario a la pantalla de inicio de sesión después de un registro exitoso
+                this.props.navigation.navigate('Login');
+              })
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      
+      
+      
+      
 
 
 

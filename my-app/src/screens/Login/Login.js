@@ -18,9 +18,13 @@ class Login extends Component {
         auth.signInWithEmailAndPassword(this.state.email, this.state.password)
         .then( res => {
             
-            this.props.navigation.navigate('Menu')
+            this.props.navigation.navigate('Home')
         })
-        .catch(err => {this.setState({error: "Credenciales incorrectas"})})
+        .catch(err => {this.setState({error: "Credenciales incorrectas"})
+        console.error(err);  // Agrega esta línea para imprimir el error en la consola
+        this.setState({ error: "Credenciales incorrectas" });
+    
+    })
     }
 
     render(){
