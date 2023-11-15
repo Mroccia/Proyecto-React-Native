@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'react-native';
+import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image} from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 
@@ -133,7 +133,7 @@ class Post extends Component {
 
 
                 <View style={styles.comentarios}>
-                    {this.props.infoPost.datos.comentarios.length === 0 ?
+                    {!this.props.infoPost.datos.comentarios ?
                         <Text style={styles.comentarios}>Todavia nadie comentó</Text>
                         :
                         <FlatList

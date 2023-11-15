@@ -43,7 +43,7 @@ class Login extends Component {
     render(){
         return(
             <ImageBackground
-            source={require('../../../assets/fondo2.jpg')}
+            source={require('../../../assets/FONDO3.jpg')}
             style={styles.background}
             >
             <View style={styles.formContainer}>
