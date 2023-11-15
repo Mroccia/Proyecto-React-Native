@@ -67,11 +67,11 @@ class Post extends Component {
                 {/* If ternario */}
                 {this.state.like ? 
                 <TouchableOpacity onPress={()=>this.disLike()}>
-                    QuitarLike
+                     <Text>Quitar Like</Text>
                 </TouchableOpacity>
                 :
                 <TouchableOpacity onPress={()=>this.likear()}>
-                    Like
+                     <Text>Like</Text>
                 </TouchableOpacity>
                 }
                 

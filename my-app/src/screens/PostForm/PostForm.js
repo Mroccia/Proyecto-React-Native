@@ -22,7 +22,7 @@ class PostForm extends Component {
             createdAt: Date.now()
         })
         .then(() => {
-            this.props.navigation.navigate("Home") 
+            this.props.navigation.navigate("Menu") 
             this.setState({
               //  camera: true,
                 post: ''
