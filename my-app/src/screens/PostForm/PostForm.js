@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
-import Camara from '../../components/Camara/Camara';
+//import Camara from '../../components/Camara/Camara';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 
 class PostForm extends Component {
@@ -8,7 +8,7 @@ class PostForm extends Component {
         super()
         this.state={
            textoPost:'',    
-           camera:'',
+        //   camera:'',
         }
     }
 
@@ -16,7 +16,7 @@ class PostForm extends Component {
         db.collection('posts').add({
             owner: auth.currentUser.email,
             textoPost: this.state.textoPost,
-            camera:camera,
+           // camera:camera,
             likes:[],
             comments:[],
             createdAt: Date.now()
@@ -24,7 +24,7 @@ class PostForm extends Component {
         .then(() => {
             this.props.navigation.navigate("Home") 
             this.setState({
-                camera: true,
+              //  camera: true,
                 post: ''
             })
         })
@@ -33,7 +33,7 @@ class PostForm extends Component {
 
     traerUrlDeFoto(url){
         this.setState({
-            camera:url
+          //  camera:url
         })
     }
 
@@ -42,7 +42,7 @@ class PostForm extends Component {
             <View style={styles.formContainer}>
                 <Text>New Post</Text>
                 {/* Corregir estilos para que se vea bien la cámara */}
-                <Camara style={styles.camera} traerUrlDeFoto = {url=>this.traerUrlDeFoto(url)} />
+                {/* <Camara style={styles.camera} traerUrlDeFoto = {url=>this.traerUrlDeFoto(url)} /> */}
                 <TextInput
                     style={styles.input}
                     onChangeText={(text)=>this.setState({textoPost: text})}
