@@ -43,14 +43,10 @@ class Home extends Component {
     render(){
         console.log(this.state);
         return(
-            <View>
-                <Text style={styles.nav}>
-                    HOME</Text>
-                <TouchableOpacity style={styles.container} onPress={()=>this.logout()}>
-                    <Text style={styles.navText}>
-                        Logout</Text>
-                </TouchableOpacity>
-
+            <View style={styles.container}>
+                <Text>
+                    Your best Burger</Text>
+            
                 <Text>Lista de Posts</Text>
                 {
                     this.state.listaPost.length === 0 
@@ -63,6 +59,10 @@ class Home extends Component {
                         renderItem={ ({item}) => <Post infoPost = { item } /> }
                     />
                 }
+                <TouchableOpacity style={styles.container} onPress={()=>this.logout()}>
+                    <Text style={styles.navText}>
+                        Logout</Text>
+                </TouchableOpacity>
                 
             </View>
         )
@@ -73,12 +73,12 @@ class Home extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#2c3e50',
+      backgroundColor: '#819cab',
       alignItems: 'center',
       justifyContent: 'center',
     },
     header: {
-      backgroundColor: '#2c3e50',
+      backgroundColor: '#819cab',
       color: '#fff',
       padding: 20,
     },
