@@ -3,57 +3,49 @@ import {db, auth } from '../../firebase/config';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
 
 class Register extends Component {
-    constructor(){
-        super()
-        this.state={
-            email:'',
-            userName:'',
-            password:''
-        }
+  constructor(){
+    super()
+    this.state={
+      email:'',
+      userName:'',
+      password:''
     }
-    componentDidMount(){
-        console.log("Chequear si el usuario está loguado en firebase.");
-
-        auth.onAuthStateChanged( user => {
-            console.log(user)
-            if( user ){
-                //Redirigir al usuario a la home del sitio.
-                this.props.navigation.navigate('Menu')
-            }
-
-        } )
-
-    }
-
-    register(email, pass, userName) {
-        auth.createUserWithEmailAndPassword(email, pass)
-          .then(response => {
-            const user = response.user;
-            console.log('Registrado ok', user);
-      
-            // Crear la colección Users
-            db.collection('users').add({
-              owner: auth.currentUser.email,
-              userName: userName,
-              createdAt: Date.now(),
-            })
-              .then(res => {
-                console.log(res);
-                // Redireccionar al usuario a la pantalla de inicio de sesión después de un registro exitoso
-                this.props.navigation.navigate('Login');
-              })
-          })
-          .catch(error => {
-            console.log(error);
+  }
+  componentDidMount(){
+    console.log("Chequear si el usuario está loguado en firebase.");
+    
+    auth.onAuthStateChanged( user => {
+      console.log(user)
+      if( user ){
+        //Redirigir al usuario a la home del sitio.
+        this.props.navigation.navigate('Menu')
+      }
+    } )
+  }
+  
+  register(email, pass, userName) {
+    auth.createUserWithEmailAndPassword(email, pass)
+      .then(response => {
+        console.log('Registrado ok', response);
+        // Crear la colección Users
+        db.collection('users').add({
+        owner: auth.currentUser.email,
+        userName: userName,
+        createdAt: Date.now(),
+      })
+      .then(res => { console.log(res);
+        // Redireccionar al usuario a la pantalla de inicio de sesión después de un registro exitoso
+        this.props.navigation.navigate('Login');
+      })
+      })
+      .catch(error => {
+        console.log(error);
           });
       }
       
       
       
       
-
-
-
     render(){
         return(
             <ImageBackground
