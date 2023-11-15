@@ -1,25 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import React, {Component} from "react";
 
 import Home from '../../screens/Home/Home';
 import PostForm from '../../screens/PostForm/PostForm';
-import Miperfil from '../MiPerfil/Miperfil';
 
 const Tab = createBottomTabNavigator();
 
-class Menu extends Component{
-    constructor(){
-        super();
-        this.state={};
-    
+function Menu (){
 
     return(
         <Tab.Navigator>
-            <Tab.Screen name='Home' component={Home}/>
-            <Tab.Screen name='postear' component={PostForm}/>
-            <Tab.Screen name="mi perfil" component ={Miperfil}/>
+            <Tab.Screen name='Home' component={Home}  options={ { headerShown: false }}/>
+            <Tab.Screen name='New Post' component={PostForm}  options={ { headerShown: false }}/>       
         </Tab.Navigator>
-    )}
+    )
 }
 
 
