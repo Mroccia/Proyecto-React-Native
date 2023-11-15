@@ -10,10 +10,23 @@ class Login extends Component {
             password:''
         }
     }
+    componentDidMount(){
+        console.log("Chequear si el usuario está loguado en firebase.");
 
+        auth.onAuthStateChanged( user => {
+            console.log(user)
+            if( user ){
+                //Redirigir al usuario a la home del sitio.
+                this.props.navigation.navigate('Menu')
+            }
+
+        } )
+
+    }
+    
     login(){
         this.state.email == '' || this.state.password == '' ? 
-        this.setState({requiredField: 'Debe completar el email y la contraseña para enviar este formulario.'})
+        this.setState({error: 'Debe completar el email y la contraseña para enviar este formulario.'})
         :
         auth.signInWithEmailAndPassword(this.state.email, this.state.password)
         .then( res => {
@@ -55,7 +68,6 @@ class Login extends Component {
                     value={this.state.password}
                 />
                 <Text style={styles.error}>{this.state.error}</Text>
-                <Text style={styles.error}>{this.state.requiredField}</Text>
                 <TouchableOpacity style={styles.button} onPress={()=>this.login(this.state.email, this.state.password)}>
                     <Text style={styles.textButton}>Ingresar</Text>    
                 </TouchableOpacity>
