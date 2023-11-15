@@ -69,9 +69,9 @@ class MiPerfil extends Component {
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View>
-                           <Text>{item.data.userName}</Text>
+                           <Text>Nombre - {item.data.userName}</Text>
                            <Image style={styles.profileImage} source={{ uri: item.data.urlImage }} />
-                           <Text>{this.state.usuarioLogueado} </Text>
+                           <Text>Mail del user - {this.state.usuarioLogueado} </Text>
                            <Text>{item.data.miniBio} </Text>
                            <Text> Cantidad de posteos: </Text>
                         </View>
