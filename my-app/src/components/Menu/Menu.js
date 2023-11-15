@@ -6,12 +6,12 @@ import PostForm from '../../screens/PostForm/PostForm';
 const Tab = createBottomTabNavigator();
 
 function Menu (){
-
     return(
         <Tab.Navigator>
-            <Tab.Screen name='Home' component={Home}  options={ { headerShown: false }}/>
-            <Tab.Screen name='New Post' component={PostForm}  options={ { headerShown: false }}/>       
-        </Tab.Navigator>
+            <Tab.Screen name='Home' component={Home}/>
+            <Tab.Screen name='Postear' component={PostForm}/>
+            <Tab.Screen name="mi perfil" component ={Miperfil}/>
+        </Tab.Navigator> 
     )
 }
 

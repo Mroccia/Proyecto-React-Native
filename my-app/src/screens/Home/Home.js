@@ -65,13 +65,13 @@ class Home extends Component {
             </View>
         )
     
-      }
+    }
 }
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#2c3e50', // Color de fondo similar al de Riot Games
+      backgroundColor: '#2c3e50',
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -99,9 +99,8 @@ const styles = StyleSheet.create({
       color: '#fff',
       textAlign: 'center',
       padding: 10,
-    },
-    // Estilos adicionales según necesidades específicas
-  });
+    }
+})
 
 
 

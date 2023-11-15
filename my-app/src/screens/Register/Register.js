@@ -13,7 +13,6 @@ class Register extends Component {
     }
     componentDidMount(){
         console.log("Chequear si el usuario está loguado en firebase.");
-        // Puse la funcionalidad aquí para probarla. No necesariamente debe ir en este componente.
 
         auth.onAuthStateChanged( user => {
             console.log(user)
@@ -34,7 +33,7 @@ class Register extends Component {
       
             // Crear la colección Users
             db.collection('users').add({
-              owner: user.email,
+              owner: auth.currentUser.email,
               userName: userName,
               createdAt: Date.now(),
             })
@@ -115,13 +114,13 @@ const styles = StyleSheet.create({
       paddingVertical: 10,
       paddingHorizontal: 15,
       borderWidth: 1,
-      borderColor: '#7289da', // Color de Riot Games
+      borderColor: '#7289da', 
       borderRadius: 8,
       marginVertical: 15,
       fontSize: 16,
     },
     button: {
-      backgroundColor: '#7289da', // Color de Riot Games
+      backgroundColor: '#7289da',
       width: '100%',
       paddingVertical: 15,
       textAlign: 'center',
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
       borderRadius: 50,
     },
-  });
+});
 
 
 export default Register;
