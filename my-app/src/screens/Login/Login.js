@@ -18,10 +18,10 @@ class Login extends Component {
         auth.signInWithEmailAndPassword(this.state.email, this.state.password)
         .then( res => {
             
-            this.props.navigation.navigate('Home')
+            this.props.navigation.navigate('Menu')
         })
         .catch(err => {this.setState({error: "Credenciales incorrectas"})
-        console.error(err);  // Agrega esta línea para imprimir el error en la consola
+        console.error(err);
         this.setState({ error: "Credenciales incorrectas" });
     
     })
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
       paddingVertical: 10,
       paddingHorizontal: 15,
       borderWidth: 1,
-      borderColor: '#7289da', // Color de Riot Games
+      borderColor: '#7289da',
       borderRadius: 8,
       marginVertical: 15,
       fontSize: 16,
     },
     button: {
-      backgroundColor: '#7289da', // Color de Riot Games
+      backgroundColor: '#7289da', 
       width: '100%',
       paddingVertical: 15,
       textAlign: 'center',
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
       borderRadius: 50,
     },
-  });
+});
 
 
 export default Login;
