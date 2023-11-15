@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'react-native';
-import { db, auth } from '../../firebase/config';
+import {StyleSheet, ActivityIndicator, Text, FlatList, ScrollView, Image, View} from 'react-native';
+import { db} from '../../firebase/config';
 import Post from '../../components/Post/Post';
 
 class Home extends Component {
     constructor(){
         super()
         this.state={
-            listaPost: []
+            post: '',
+            posts: null
         }
     }
 
     componentDidMount(){
         //Traer datos
-        db.collection('posts').onSnapshot(
+        db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
             posteos => {
                 let postsAMostrar = [];
 
@@ -27,44 +28,33 @@ class Home extends Component {
                 })
 
                 this.setState({
-                    listaPost: postsAMostrar
+                    posts: postsAMostrar
                 })
             }
         )
     }
 
-
-    logout(){
-        auth.signOut()
-        this.props.navigation.navigate('Login')
-    }
-
-
     render(){
         console.log(this.state);
         return(
-            <View>
-                <Text style={styles.nav}>
-                    HOME</Text>
-                <TouchableOpacity style={styles.container} onPress={()=>this.logout()}>
-                    <Text style={styles.navText}>
-                        Logout</Text>
-                </TouchableOpacity>
+            <ScrollView style={styles.containerHome}>
+                <View style={styles.container}>
+                    <Image style={styles.img} source={require('../../../assets/fondo.jpg')} resizeMode='contain'/>
+                    <Text>Your best Burger</Text>
+                    <Text>Lista de Posts</Text>
+                </View>
 
-                <Text>Lista de Posts</Text>
-                {
-                    this.state.listaPost.length === 0 
-                    ?
-                    <Text>Cargando...</Text>
+                {this.state.posts === null ?
+                    <ActivityIndicator size='large' color='orange' style={styles.loader} />
+                    
                     :
                     <FlatList 
-                        data= {this.state.listaPost}
+                        data= {this.state.posts}
                         keyExtractor={ unPost => unPost.id }
-                        renderItem={ ({item}) => <Post infoPost = { item } /> }
+                        renderItem={ ({item}) => <Post infoPost = { item } navigation={this.props.navigation} /> }
                     />
                 }
-                
-            </View>
+            </ScrollView>
         )
     
     }
@@ -73,12 +63,26 @@ class Home extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#2c3e50',
+      backgroundColor: '#819cab',
       alignItems: 'center',
       justifyContent: 'center',
     },
+    img:{
+        flex: 1,
+        height: 40,
+        width: 40,              
+    },
+    loader:{
+        marginTop: 100
+    },
+    containerHome: {
+        alignContent: 'center',  
+        textAlign: 'center',
+        backgroundColor: '#F4F4F1',
+        pading : 25,
+    },
     header: {
-      backgroundColor: '#2c3e50',
+      backgroundColor: '#819cab',
       color: '#fff',
       padding: 20,
     },

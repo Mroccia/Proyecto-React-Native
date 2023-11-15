@@ -19,64 +19,64 @@ class Camara extends Component {
 
     componentDidMount() {
         Camera.requestCameraPermissionsAsync()
-          .then(()=>{
-               this.setState({
+            .then(()=>{
+                this.setState({
                 permisos: true,
-               })
-          })
-          .catch( e => console.log('El error fue' + e))          
-      }
+            })
+        })
+        .catch( e => console.log('El error fue' + e))          
+    }
 
-      takePicture(){
+    takePicture(){
         console.log(this.metodosDeCamara);
         this.metodosDeCamara.takePictureAsync()
          .then(photo => {
             this.setState({
                 urlImg: photo.uri, 
-                showCamara:false
+                mostraCamara:false
             })
         })
-      }
+    }
 
-      savePhoto(){
+    savePhoto(){
         fetch(this.state.urlImg)
-         .then(res=>res.blob())
-         .then(image =>{
-           const ref = storage.ref(`photos/${Date.now()}.jpg`)
-           ref.put(image)
-                .then(()=>{
-                   ref.getDownloadURL()
-                        .then(url => {
-                            this.props.onImageUpload(url);
-                            //Borra la url temporal del estado.
-                            this.setState({
-                                urlImg: '',
-                            })
-                        })
-                 })
-         })
-         .catch(e=>console.log(e))
-       }
-
-       borrarFoto() {
+        .then(res=>res.blob())
+        .then(image =>{
+            const ref = storage.ref(`photos/${Date.now()}.jpg`)
+            ref.put(image)
+            .then(()=>{
+                ref.getDownloadURL()
+                .then(url => {
+                    this.props.traerUrlDeFoto(url);
+                    //Borra la url temporal del estado.
+                    this.setState({
+                        urlImg: ''
+                    })
+                })
+            })
+        })
+        .catch(e=>console.log(e))
+    }
+    
+    borrarFoto() {
         this.setState({
-            showCamara: true,
+            mostraCamara: true,
             Img: ''
         })
-       }
-
-       stopCamera() {
+    }
+    
+    stopCamera() {
         this.setState({
-            showCamara: false
+            mostraCamara: false
         })
-       }
-       
-       render() {
+    }
+    
+    render() {
         return (
         <>
             {this.state.permisos ?
                 
-                this.state.showCamera === false ?
+                this.state.mostraCamara === false ?
                 <View style={styles.view}>
                     <Image
                     style={styles.camera}
@@ -100,7 +100,7 @@ class Camara extends Component {
                     <Camera
                     style={styles.camera}
                     type={Camera.Constants.Type.front}
-                    ref = { (metodos) => this.cameraMethods = metodos }
+                    ref = { (metodos) => this.metodosDeCamara = metodos }
                     />
 
                     <View style={styles.button}>
@@ -121,9 +121,9 @@ class Camara extends Component {
 
             }
             
-            </>
+        </>
             
-        )}
+    )}
 }
 const styles = StyleSheet.create({
         container: {
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
             alignItems: 'center',
         },
         camera: {
+            flex: 1,
             width: 300, // Ancho de la vista de la cámara
             height: 400, // Alto de la vista de la cámara
         },

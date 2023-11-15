@@ -8,7 +8,8 @@ class PostForm extends Component {
         super()
         this.state={
            textoPost:'',    
-           camera:'',
+           camera: true,
+           foto: ''
         }
     }
 
@@ -16,16 +17,16 @@ class PostForm extends Component {
         db.collection('posts').add({
             owner: auth.currentUser.email,
             textoPost: this.state.textoPost,
-            camera:camera,
+            foto: this.state.foto,
             likes:[],
-            comments:[],
+            comentarios:[],
             createdAt: Date.now()
         })
         .then(() => {
             this.props.navigation.navigate("Home") 
             this.setState({
                 camera: true,
-                post: ''
+                textoPost: ''
             })
         })
         .catch( e => console.log(e))
@@ -33,27 +34,41 @@ class PostForm extends Component {
 
     traerUrlDeFoto(url){
         this.setState({
-            camera:url
+            foto: url,
+            camera: false
         })
     }
 
-    render(){
+    render() {
         return(
+
             <View style={styles.formContainer}>
-                <Text>New Post</Text>
-                {/* Corregir estilos para que se vea bien la cámara */}
-                <Camara style={styles.camera} traerUrlDeFoto = {url=>this.traerUrlDeFoto(url)} />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text)=>this.setState({textoPost: text})}
-                    placeholder='Escribir...'
-                    keyboardType='default'
+                <Text style={styles.title}>New post</Text>
+
+                {this.state.camera ? 
+                    <View style={styles.camera}>
+                        <Camara traerUrlDeFoto={(url) => this.traerUrlDeFoto(url)} style={styles.camera}/> 
+                    </View>
+                    : 
+                    <Image style={styles.img} source={{uri: this.state.foto}}/> 
+                }
+
+                <TextInput 
+                    style={styles.input} 
+                    placeholder="Escribir" 
+                    onChangeText={ text => this.setState({ textoPost: text }) }
                     value={this.state.textoPost}
-                    />
-                <TouchableOpacity style={styles.button} onPress={()=>this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.camera, Date.now())}>
-                    <Text style={styles.textButton}>Postear</Text>    
-                </TouchableOpacity>
+                />
+
+                {this.state.foto == ''? 
+                    <Text style={styles.error}>You need to upload a picture</Text>
+                    :
+                    <TouchableOpacity onPress={() =>  {this.crearPost();  this.props.navigation.navigate('Home')}}>
+                        <Text style={styles.button}>Postear</Text>
+                    </TouchableOpacity>
+                }
             </View>
+
         )
     }
 }
@@ -89,7 +104,12 @@ const styles = StyleSheet.create({
     },
     camera:{
         height: 400,
-    }
+    },
+    img: {
+        width: 200,
+        height: 200,
+        margin: 30
+    },
 
 })
 
