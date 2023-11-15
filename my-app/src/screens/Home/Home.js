@@ -44,9 +44,11 @@ class Home extends Component {
         console.log(this.state);
         return(
             <View>
-                <Text>HOME</Text>
-                <TouchableOpacity onPress={()=>this.logout()}>
-                    <Text>Logout</Text>
+                <Text style={styles.nav}>
+                    HOME</Text>
+                <TouchableOpacity style={styles.container} onPress={()=>this.logout()}>
+                    <Text style={styles.navText}>
+                        Logout</Text>
                 </TouchableOpacity>
 
                 <Text>Lista de Posts</Text>

@@ -49,7 +49,7 @@ class Register extends Component {
     render(){
         return(
             <ImageBackground
-            source={require('../../../assets/National-Cheeseburger-Day.png')}
+            source={require('../../../assets/fondo2.jpg')}
                 style={styles.background}
                 >
             <View style={styles.formContainer}>
