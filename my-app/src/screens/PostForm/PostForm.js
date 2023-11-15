@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
-import Camara from '../../components/Camara/Camara';
+//import Camara from '../../components/Camara/Camara';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 
 class PostForm extends Component {
@@ -23,7 +23,7 @@ class PostForm extends Component {
             createdAt: Date.now()
         })
         .then(() => {
-            this.props.navigation.navigate("Home") 
+            this.props.navigation.navigate("Menu") 
             this.setState({
                 camera: true,
                 textoPost: ''
