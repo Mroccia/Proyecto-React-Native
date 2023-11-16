@@ -1,7 +1,6 @@
 import { Camera } from 'expo-camera'
 import React, {Component} from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image, TextInput} from "react-native"
-import {StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet} from "react-native"
 import {storage} from '../../firebase/config'
 
 class Camara extends Component {
@@ -13,7 +12,7 @@ class Camara extends Component {
             permisos: false,
             urlImg: ''
         }
-        this.metodosDeCamara = undefined
+        this.metodosDeCamara = ''
     }
 
 
@@ -47,7 +46,7 @@ class Camara extends Component {
             .then(()=>{
                 ref.getDownloadURL()
                 .then(url => {
-                    this.props.traerUrlDeFoto(url);
+                    this.props.onImageUpload(url);
                     //Borra la url temporal del estado.
                     this.setState({
                         urlImg: ''
@@ -61,13 +60,7 @@ class Camara extends Component {
     borrarFoto() {
         this.setState({
             mostraCamara: true,
-            Img: ''
-        })
-    }
-    
-    stopCamera() {
-        this.setState({
-            mostraCamara: false
+            urlImg: ''
         })
     }
     
@@ -76,15 +69,15 @@ class Camara extends Component {
         <>
             {this.state.permisos ?
                 
-                this.state.mostraCamara === false ?
+                this.state.mostraCamara ?
                 <View style={styles.view}>
                     <Image
-                    style={styles.camera}
-                    source={{uri: this.state.urlImg}}
+                        style={styles.camera}
+                        source={{uri: this.state.urlImg}}
                     />
 
                     <View>
-                        <TouchableOpacity onPress={() => {this.savePhoto() , this.stopCamera()}}>
+                        <TouchableOpacity onPress={() => {this.savePhoto()}}>
                             <Text>Usar esta imagen</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.borrarFoto()}>
@@ -132,10 +125,13 @@ const styles = StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
         },
+        view: {
+            flex: 1
+        },
         camera: {
             flex: 1,
-            width: 300, // Ancho de la vista de la cámara
-            height: 400, // Alto de la vista de la cámara
+            width: '300px', // Ancho de la vista de la cámara
+            height: '400px', // Alto de la vista de la cámara
         },
 });
 

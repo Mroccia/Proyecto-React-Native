@@ -16,10 +16,10 @@ class Home extends Component {
         //Traer datos
         db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
             posteos => {
-                let postsAMostrar = [];
+                let posts = [];
 
                 posteos.forEach( unPost => {
-                    postsAMostrar.push(
+                    posts.push(
                         {
                             id: unPost.id,
                             datos: unPost.data()
@@ -28,7 +28,7 @@ class Home extends Component {
                 })
 
                 this.setState({
-                    posts: postsAMostrar
+                    posts: posts
                 })
             }
         )

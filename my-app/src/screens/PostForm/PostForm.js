@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
-//import Camara from '../../components/Camara/Camara';
+import Camara from '../../components/Camara/Camara';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 
 class PostForm extends Component {
     constructor(){
         super()
         this.state={
+            owner:'',
            textoPost:'',    
            camera: true,
+           createdAt:'',
            foto: ''
         }
     }
@@ -23,7 +25,7 @@ class PostForm extends Component {
             createdAt: Date.now()
         })
         .then(() => {
-            this.props.navigation.navigate("Menu") 
+            this.props.navigation.navigate("Home") 
             this.setState({
                 camera: true,
                 textoPost: ''
@@ -110,6 +112,12 @@ const styles = StyleSheet.create({
         height: 200,
         margin: 30
     },
+    error: {
+        color: 'red',
+        marginTop: 2,
+        textAlign: 'center',
+        fontSize: 15,
+    }
 
 })
 

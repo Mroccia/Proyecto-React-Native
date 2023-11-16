@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image} from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
+import { FontAwesome } from '@expo/vector-icons';
 
 class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
             mg: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
+            cantidadDeLikes: this.props.infoPost.datos.likes.length,
             comentarios: '',
             comentarioVacio: '',
             posts: [],
@@ -35,7 +37,7 @@ class Post extends Component {
         .then( res => {
             this.setState({
                 mg: true,
-                cantidadDeLikes: this.props.infoPost.datos.likes.length
+                cantidadDeLikes: this.state.cantidadDeLikes + 1
             })
         })
         .catch( e => console.log(e))
@@ -49,7 +51,7 @@ class Post extends Component {
         .then( res => {
             this.setState({
                 mg: false,
-                cantidadDeLikes: this.props.infoPost.datos.likes.length
+                cantidadDeLikes: this.state.cantidadDeLikes - 1
             })
         })
         .catch( e => console.log(e))
@@ -69,7 +71,7 @@ class Post extends Component {
     }
 
     irPerfil(user) {
-        this.props.navigation.navigate("OtherProfile", { user: user })
+        this.props.navigation.navigate("Perfil", { user: user })
     }
 
     deleteMessage(){
@@ -100,7 +102,7 @@ class Post extends Component {
                 <View style={styles.deleteContainer}>
                     {this.props.infoPost.datos.owner == auth.currentUser.email
                         ?
-                        <Text onPress={() => this.props.navigation.navigate("Profile")} style={styles.nameOne}>
+                        <Text onPress={() => this.props.navigation.navigate("Mi Perfil")} style={styles.nameOne}>
                             {this.props.infoPost.datos.owner}
                         </Text>
                         :
@@ -123,9 +125,13 @@ class Post extends Component {
                     <View style={styles.like}>
 
                         {this.state.mg ?
-                            <TouchableOpacity onPress={() => this.disLike()}></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.disLike()}>
+                                 <FontAwesome name="heart" color="red" size={30} />
+                            </TouchableOpacity>
                             :
-                            <TouchableOpacity onPress={() => this.likear()}></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.likear()}>
+                                <FontAwesome name="heart" color="red" size={30} />
+                            </TouchableOpacity>
                         }
                     </View>
                     <Text style={styles.likes}> {this.state.cantidadDeLikes} likes</Text>
@@ -134,7 +140,7 @@ class Post extends Component {
 
                 <View style={styles.comentarios}>
                     {!this.props.infoPost.datos.comentarios ?
-                        <Text style={styles.comentarios}>Todavia nadie comentó</Text>
+                        <Text style={styles.comentarios}>Aún no hay comentarios</Text>
                         :
                         <FlatList
                             data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
