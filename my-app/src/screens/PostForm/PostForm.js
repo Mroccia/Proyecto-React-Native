@@ -7,7 +7,7 @@ class PostForm extends Component {
     constructor(){
         super()
         this.state={
-            owner:'',
+           owner:'',
            textoPost:'',    
            camera: true,
            createdAt:'',
@@ -57,15 +57,15 @@ class PostForm extends Component {
 
                 <TextInput 
                     style={styles.input} 
-                    placeholder="Escribir" 
+                    placeholder="Escribir...    " 
                     onChangeText={ text => this.setState({ textoPost: text }) }
                     value={this.state.textoPost}
                 />
 
                 {this.state.foto == ''? 
-                    <Text style={styles.error}>You need to upload a picture</Text>
+                    <Text style={styles.error}>Tenes que subir una imagen</Text>
                     :
-                    <TouchableOpacity onPress={() =>  {this.crearPost();  this.props.navigation.navigate('Home')}}>
+                    <TouchableOpacity onPress={() => this.crearPost(auth.currentUser.owner, this.state.textoPost, this.state.foto, Date.now())}>
                         <Text style={styles.button}>Postear</Text>
                     </TouchableOpacity>
                 }
