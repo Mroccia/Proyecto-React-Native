@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, ActivityIndicator, Text, FlatList, ScrollView, Image, View} from 'react-native';
-import { db} from '../../firebase/config';
+import { auth, db} from '../../firebase/config';
 import Post from '../../components/Post/Post';
 
 class Home extends Component {
@@ -12,27 +12,34 @@ class Home extends Component {
         }
     }
 
-    componentDidMount(){
-        //Traer datos
-        db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
-            posteos => {
-                let posts = [];
-
-                posteos.forEach( unPost => {
-                    posts.push(
-                        {
-                            id: unPost.id,
-                            datos: unPost.data()
-                        }
-                    )
-                })
-
-                this.setState({
-                    posts: posts
-                })
+    componentDidMount() {
+        auth.onAuthStateChanged(user => {
+            console.log(user);
+            if (user === null) {
+                // Redirigir al usuario al login
+                this.props.navigation.navigate('Login');
+            } else {
+                // Traer datos
+                db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
+                    posteos => {
+                        let posts = [];
+    
+                        posteos.forEach(unPost => {
+                            posts.push({
+                                id: unPost.id,
+                                datos: unPost.data(),
+                            });
+                        });
+    
+                        this.setState({
+                            posts: posts,
+                        });
+                    }
+                );
             }
-        )
+        });
     }
+    
 
     render(){
         console.log(this.state);
@@ -59,6 +66,9 @@ class Home extends Component {
 
     }
 }
+    
+    
+        
 
 const styles = StyleSheet.create({
     container: {

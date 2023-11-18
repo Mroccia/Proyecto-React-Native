@@ -86,6 +86,19 @@ class Post extends Component {
         this.setState({deleteMessage: '', delete: false})
     }
    
+    // deleteComment(){
+    //     const postId = this.props.infoPost.id;
+
+        
+    //     const commentTimestamp = comentarios.createdAt;
+    
+    //     db.collection('posts').doc(postId)
+    //         .update({
+    //             comentarios: firebase.firestore.FieldValue.arrayRemove(
+    //                 this.props.infoPost.datos.comentarios.find(c => c.createdAt === commentTimestamp)
+    //             ),
+    //         })
+    // }
 
     render() {
         console.log(this.props);
@@ -148,7 +161,9 @@ class Post extends Component {
 
                                 return item.createdAt.toString()
                             }}
-                            renderItem={({ item }) => <Text>{item.author}: {item.text}</Text>}
+                            renderItem={({ item }) => <Text>{item.author}: {item.text} <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
+                            <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
+                        </TouchableOpacity></Text>}
                         />
                     }
                     <TextInput

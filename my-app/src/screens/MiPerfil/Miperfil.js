@@ -31,6 +31,7 @@ class MiPerfil extends Component {
                 this.setState({
                     data: user,
                 })
+                console.log("User data:", user);
             }
 
         )
@@ -68,6 +69,7 @@ class MiPerfil extends Component {
                     data={this.state.data}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
+                        
                         <View>
                            <Text>Nombre - {item.data.userName}</Text>
                            <Image style={styles.profileImage} source={{ uri: item.data.urlImage }} />
@@ -88,6 +90,7 @@ class MiPerfil extends Component {
            
                         </View>
                     )}
+                    
                 />
 
                 <TouchableOpacity style= {styles.nav} onPress={() => this.logout()}>
