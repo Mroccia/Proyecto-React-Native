@@ -29,9 +29,9 @@ class Camara extends Component {
     takePicture(){
         console.log(this.metodosDeCamara);
         this.metodosDeCamara.takePictureAsync()
-         .then(photo => {
+         .then(foto => {
             this.setState({
-                urlImg: photo.uri, 
+                urlImg: foto.uri, 
                 mostraCamara:false
             })
         })
@@ -47,10 +47,6 @@ class Camara extends Component {
                 ref.getDownloadURL()
                 .then(url => {
                     this.props.onImageUpload(url);
-                    //Borra la url temporal del estado.
-                    this.setState({
-                        urlImg: ''
-                    })
                 })
             })
         })
@@ -71,24 +67,6 @@ class Camara extends Component {
                 
                 this.state.mostraCamara ?
                 <View style={styles.view}>
-                    <Image
-                        style={styles.camera}
-                        source={{uri: this.state.urlImg}}
-                    />
-
-                    <View>
-                        <TouchableOpacity onPress={() => {this.savePhoto()}}>
-                            <Text>Usar esta imagen</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.borrarFoto()}>
-                            <Text>Cancelar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>    
-
-                :
-
-                <View style={styles.view}>
 
                     <Camera
                     style={styles.camera}
@@ -99,11 +77,27 @@ class Camara extends Component {
                     <View style={styles.button}>
 
                         <TouchableOpacity onPress={() => this.takePicture()}>
-                            <Text style={styles.field}>   Take a picture</Text>
+                            <Text style={styles.field}>Sacar foto</Text>
                         </TouchableOpacity>
 
                     </View>
 
+                </View>    
+                :
+                <View style={styles.view}>
+                    <Image
+                        style={styles.camera}
+                        source={{uri: this.state.urlImg}}
+                    />
+
+                    <View>
+                        <TouchableOpacity onPress={() => this.savePhoto()}>
+                            <Text>Usar esta imagen</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.borrarFoto()}>
+                            <Text>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 : 

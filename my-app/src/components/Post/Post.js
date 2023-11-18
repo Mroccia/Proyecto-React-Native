@@ -12,10 +12,7 @@ class Post extends Component {
             cantidadDeLikes: this.props.infoPost.datos.likes.length,
             comentarios: '',
             comentarioVacio: '',
-            posts: [],
-            borrarMsj: '',
-            borrar: false,
- 
+            posts: []
         }
     }
 
@@ -75,7 +72,7 @@ class Post extends Component {
     }
 
     deleteMessage(){
-        this.setState({deleteMessage: 'Are you sure you want to delete this post?', delete: true})
+        this.setState({deleteMessage: 'Estas seguro de borrar el post?', delete: true})
     }
 
     deletePost(){
@@ -115,7 +112,7 @@ class Post extends Component {
                 <View style={styles.deleteContainer}>
                     {this.props.infoPost.datos.owner == auth.currentUser.email
                         ?
-                        <Text onPress={() => this.props.navigation.navigate("Mi Perfil")} style={styles.nameOne}>
+                        <Text onPress={() => this.props.navigation.navigate("MiPerfil")} style={styles.nameOne}>
                             {this.props.infoPost.datos.owner}
                         </Text>
                         :
