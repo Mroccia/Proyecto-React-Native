@@ -8,7 +8,7 @@ class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mg: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
+            mg: false,
             cantidadDeLikes: this.props.infoPost.datos.likes.length,
             comentarios: '',
             comentarioVacio: '',
@@ -20,7 +20,7 @@ class Post extends Component {
         //Indicar si el post ya está likeado o no.
         if(this.props.infoPost.datos.likes.includes(auth.currentUser.email)){
             this.setState({
-                likes: true
+                mg: true
             })
         }
     }
@@ -83,20 +83,17 @@ class Post extends Component {
         this.setState({deleteMessage: '', delete: false})
     }
    
-    // deleteComment(){
-    //     const postId = this.props.infoPost.id;
-
-        
-    //     const commentTimestamp = comentarios.createdAt;
+    deleteComment(commentTimestamp) {
+        const postId = this.props.infoPost.id;
     
-    //     db.collection('posts').doc(postId)
-    //         .update({
-    //             comentarios: firebase.firestore.FieldValue.arrayRemove(
-    //                 this.props.infoPost.datos.comentarios.find(c => c.createdAt === commentTimestamp)
-    //             ),
-    //         })
-    // }
-
+        db.collection('posts').doc(postId).update({
+            comentarios: firebase.firestore.FieldValue.arrayRemove(
+                this.props.infoPost.datos.comentarios.find(c => c.createdAt === commentTimestamp)
+            ),
+        })
+       
+    }
+    
     render() {
         console.log(this.props);
         const date = this.props.infoPost.datos.createdAt
@@ -140,7 +137,7 @@ class Post extends Component {
                             </TouchableOpacity>
                             :
                             <TouchableOpacity onPress={() => this.likear()}>
-                                <FontAwesome name="heart" color="red" size={30} />
+                                <FontAwesome name="heart" color="grey" size={30} />
                             </TouchableOpacity>
                         }
                     </View>
@@ -190,7 +187,7 @@ class Post extends Component {
                                 <TouchableOpacity onPress={() => this.deletePost()}>
                                     <Text style={styles.confirmationButton}>Yes</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.notDelete()}>
+                              <TouchableOpacity onPress={() => this.notDelete()}>
                                     <Text style={styles.denialButton}>No</Text>
                                 </TouchableOpacity>
                              </View>
