@@ -21,6 +21,7 @@ function Menu (){
             }}>
             <Tab.Screen name='BURGERDAY' component={Home} options={{tabBarLabel: 'BURGERDAY', headerTintColor: 'brown'}}/>
             <Tab.Screen name='Postear' component={PostForm} color="green"/>
+            <Tab.Screen name = "Buscar Usuarios" component = {Resultados} color="green"/>
             <Tab.Screen name='Miperfil' component={MiPerfil} color="green"/>
         </Tab.Navigator> 
     )
