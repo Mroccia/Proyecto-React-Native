@@ -55,7 +55,6 @@ componentDidMount(){
     )
   
 }
-<<<<<<< HEAD
 render(){
         return(
             <View style = {styles.container}>
@@ -81,55 +80,5 @@ const styles = StyleSheet.create({
         width: '100%'
     },
   });
-=======
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#2c3e50',
-        justifyContent: 'center',
-        padding: 16,
-    },
-    user: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    profileImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        marginRight: 16,
-    },
-    userData: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-    },
-    userName: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'grey'
-    },
-    userEmail: {
-        fontSize: 16,
-        color: 'grey',
-    },
-    userBio: {
-        fontSize: 14,
-        marginVertical: 8,
-    },
-    userPostCount: {
-        fontSize: 16,
-    },
-    logoutButton: {
-        backgroundColor: '#rgb(60, 60, 60)',
-        padding: 12,
-        borderRadius: 4,
-        marginTop: 16,
-        alignItems: 'center',
-    },
-});
->>>>>>> 290ea06c4594c9bc023c8c270fbd25ccd3ed18f9
 
 export default MiPerfil;

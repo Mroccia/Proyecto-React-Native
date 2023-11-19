@@ -67,7 +67,9 @@ class Post extends Component {
                     }),
                 })
                 .then(() => {
-                    this.setState({ comentarios: '', comentarioVacio: '' });
+                    this.setState({
+                    comentarios: '',
+                    comentarioVacio: '' });
                 })
                 .catch((error) => {
                     console.log('Error en onSubmit:', error);
@@ -75,7 +77,6 @@ class Post extends Component {
         }
     }
 
-<<<<<<< HEAD
     irPerfil(user) {
         this.props.navigation.navigate("OtroPerfil", { user: user })
     }
@@ -92,8 +93,6 @@ class Post extends Component {
         this.setState({deleteMessage: '', delete: false})
     }
    
-=======
->>>>>>> 290ea06c4594c9bc023c8c270fbd25ccd3ed18f9
     deleteComment(commentTimestamp) {
         const postId = this.props.infoPost.id;
 
@@ -110,11 +109,11 @@ class Post extends Component {
     }
 
     render() {
-        const { infoPost, navigation } = this.props;
-        const { mg, cantidadDeLikes, comentarios, comentarioVacio, showComments } = this.state;
-    
-        const date = infoPost.datos.createdAt;
-        const fecha = new Date(date).toString();
+        const date = this.props.infoPost.datos.createdAt
+
+        const d = Date(date);
+
+        const fecha = d.toString()
     
         return (
             <View style={styles.postContainer}>
@@ -133,7 +132,7 @@ class Post extends Component {
 
                 <View style={styles.likesContainer}>
                     <View style={styles.like}>
-                        {mg ? (
+                        {this.state.mg ? (
                             <TouchableOpacity onPress={() => this.disLike()}>
                                 <FontAwesome name="heart" color="red" size={30} />
                             </TouchableOpacity>
@@ -143,49 +142,65 @@ class Post extends Component {
                             </TouchableOpacity>
                         )}
                     </View>
-                    <Text style={styles.likes}>{cantidadDeLikes} likes</Text>
+                    <Text style={styles.likes}>{this.state.cantidadDeLikes} likes</Text>
                 </View>
-    
-                {showComments && (
-                    <View style={styles.comentarios}>
-                        <Text style={styles.comentariosContador}>Cantidad de comentarios: {infoPost.datos.comentarios.length}</Text>
-                        {!infoPost.datos.comentarios ? (
-                            <Text style={styles.comentarios}>Aún no hay comentarios</Text>
-                        ) : (
-                            <FlatList
-                                data={infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
-                                keyExtractor={(item) => item.createdAt.toString()}
-                                renderItem={({ item }) => (
-                                    <View style={styles.commentContainer}>
-                                        <Text>{item.author}: {item.text}</Text>
-                                        {auth.currentUser.email === item.author && (
-                                            <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
-                                                <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    </View>
-                                )}
-                            />
-                        )}
-                        <TextInput
-                            keyboardType="default"
-                            placeholder="Escribi un comentario"
-                            onChangeText={(text) => this.setState({ comentarios: text })}
-                            value={comentarios}
-                            style={styles.field}
+
+                <View style={styles.comentarios}>
+                    {this.props.infoPost.datos.comentarios.length === 0 ?
+                        <Text style={styles.comentarios}>Aún no hay comentarios</Text>
+                        :
+                        <FlatList
+                            data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
+                            keyExtractor={item => {
+
+                                return item.createdAt.toString()
+                            }}
+                            renderItem={({ item }) => <Text>{item.author}: {item.text}</Text>}
                         />
-                        <Text style={styles.error}>{comentarioVacio}</Text>
-                        <TouchableOpacity onPress={() => this.onSubmit()}>
-                            <Text style={styles.button}>Agregar comentario</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.postedOn}>Posted on {fecha}</Text>
-                    </View>
-                )}
-                <TouchableOpacity onPress={() => this.setState({ showComments: !showComments })}>
-                    <Text style={styles.comentariosContador}>
-                        {showComments ? 'Ocultar Comentarios' : 'Mostrar Comentarios'}
+                    }
+                    <TextInput
+                        keyboardType='default'
+                        placeholder='   Write a comment'
+                        onChangeText={text => this.setState({ comentarios: text })}
+                        value={this.state.comentarios}
+                        style={styles.field}
+                    />
+
+                    <Text style={styles.error}>{this.state.comentarioVacio}</Text>
+
+                    <TouchableOpacity onPress={() => this.onSubmit()}>
+                        <Text style={styles.button}>Add comment</Text>
+                    </TouchableOpacity>
+
+                    {
+                        this.props.infoPost.datos.owner == auth.currentUser.email ?
+                        <>
+                            <TouchableOpacity onPress={() => this.deleteMessage()}>
+                                <Text style={styles.deletebutton}>Delete post</Text>
+                            </TouchableOpacity>
+
+                             <Text style={styles.deleteMessage}>{this.state.deleteComment}</Text>
+                            {this.state.delete  ?
+                             <View style={styles.deleteContainer}>
+                                <TouchableOpacity onPress={() => this.deletePost()}>
+                                    <Text style={styles.confirmationButton}>Yes</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.notDelete()}>
+                                    <Text style={styles.denialButton}>No</Text>
+                                </TouchableOpacity>
+                             </View>
+                            :
+                            <></>
+                             }
+                        </>
+                        :
+                        <></>
+                    }
+                    
+                    <Text style={styles.postedOn}> 
+                    Posted on {fecha}
                     </Text>
-                </TouchableOpacity>
+                    </View>
             </View>
         );
     }

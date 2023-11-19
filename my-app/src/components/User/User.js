@@ -48,7 +48,7 @@ render(){
                 keyExtractor={(post) => post.id}
                 renderItem = {({item}) => (
                     <View style = {styles.postContainer}>
-                        <Image style={styles.camera} source = {{uri:item.datos.url}}/>
+                        <Image style={styles.camera} source = {{uri:item.datos.foto}}/>
                         <Text style = {styles.text}>{item.datos.post}</Text>
                         {this.props.info.datos.owner == auth.currentUser.email ? 
                         (<TouchableOpacity style = {styles.button} onPress={() => this.borrarPost(item.id)}>
