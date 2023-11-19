@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image, Alert } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
@@ -85,6 +85,10 @@ class Post extends Component {
                     this.props.infoPost.datos.comentarios.find((c) => c.createdAt === commentTimestamp)
                 ),
             })
+            .then(() => {
+                this.setState({ comentarios: '', comentarioVacio: '' });
+                Alert.alert('Comentario eliminado', 'El comentario se eliminó exitosamente.');
+            })
             .catch((error) => {
                 console.log('Error en deleteComment:', error);
             });
@@ -96,6 +100,8 @@ class Post extends Component {
     
         const date = infoPost.datos.createdAt;
         const fecha = new Date(date).toString();
+    
+        let commentsToShow = showComments ? infoPost.datos.comentarios : infoPost.datos.comentarios.slice(0, 4);
     
         return (
             <View style={styles.postContainer}>
@@ -133,12 +139,14 @@ class Post extends Component {
     
                 {showComments && (
                     <View style={styles.comentarios}>
-                        <Text style={styles.comentariosContador}>Cantidad de comentarios: {infoPost.datos.comentarios.length}</Text>
-                        {!infoPost.datos.comentarios ? (
+                        <Text style={styles.comentariosContador}>
+                            Cantidad de comentarios: {infoPost.datos.comentarios.length}
+                        </Text>
+                        {!commentsToShow.length ? (
                             <Text style={styles.comentarios}>Aún no hay comentarios</Text>
                         ) : (
                             <FlatList
-                                data={infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
+                                data={commentsToShow.sort((a, b) => a.createdAt - b.createdAt)}
                                 keyExtractor={(item) => item.createdAt.toString()}
                                 renderItem={({ item }) => (
                                     <View style={styles.commentContainer}>
