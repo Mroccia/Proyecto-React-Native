@@ -1,7 +1,6 @@
 import { Camera } from 'expo-camera'
 import React, {Component} from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image, TextInput} from "react-native"
-import {StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet} from "react-native"
 import {storage} from '../../firebase/config'
 
 class Camara extends Component {
@@ -13,7 +12,7 @@ class Camara extends Component {
             permisos: false,
             urlImg: ''
         }
-        this.metodosDeCamara = undefined
+        this.metodosDeCamara = ''
     }
 
 
@@ -30,9 +29,9 @@ class Camara extends Component {
     takePicture(){
         console.log(this.metodosDeCamara);
         this.metodosDeCamara.takePictureAsync()
-         .then(photo => {
+         .then(foto => {
             this.setState({
-                urlImg: photo.uri, 
+                urlImg: foto.uri, 
                 mostraCamara:false
             })
         })
@@ -47,11 +46,7 @@ class Camara extends Component {
             .then(()=>{
                 ref.getDownloadURL()
                 .then(url => {
-                    this.props.traerUrlDeFoto(url);
-                    //Borra la url temporal del estado.
-                    this.setState({
-                        urlImg: ''
-                    })
+                    this.props.onImageUpload(url);
                 })
             })
         })
@@ -61,13 +56,7 @@ class Camara extends Component {
     borrarFoto() {
         this.setState({
             mostraCamara: true,
-            Img: ''
-        })
-    }
-    
-    stopCamera() {
-        this.setState({
-            mostraCamara: false
+            urlImg: ''
         })
     }
     
@@ -76,25 +65,7 @@ class Camara extends Component {
         <>
             {this.state.permisos ?
                 
-                this.state.mostraCamara === false ?
-                <View style={styles.view}>
-                    <Image
-                    style={styles.camera}
-                    source={{uri: this.state.urlImg}}
-                    />
-
-                    <View>
-                        <TouchableOpacity onPress={() => {this.savePhoto() , this.stopCamera()}}>
-                            <Text>Usar esta imagen</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.borrarFoto()}>
-                            <Text>Cancelar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>    
-
-                :
-
+                this.state.mostraCamara ?
                 <View style={styles.view}>
 
                     <Camera
@@ -106,11 +77,27 @@ class Camara extends Component {
                     <View style={styles.button}>
 
                         <TouchableOpacity onPress={() => this.takePicture()}>
-                            <Text style={styles.field}>   Take a picture</Text>
+                            <Text style={styles.field}>Sacar foto</Text>
                         </TouchableOpacity>
 
                     </View>
 
+                </View>    
+                :
+                <View style={styles.view}>
+                    <Image
+                        style={styles.camera}
+                        source={{uri: this.state.urlImg}}
+                    />
+
+                    <View>
+                        <TouchableOpacity onPress={() => this.savePhoto()}>
+                            <Text>Usar esta imagen</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.borrarFoto()}>
+                            <Text>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 : 
@@ -132,10 +119,13 @@ const styles = StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
         },
+        view: {
+            flex: 1
+        },
         camera: {
             flex: 1,
-            width: 300, // Ancho de la vista de la cámara
-            height: 400, // Alto de la vista de la cámara
+            width: '300px', // Ancho de la vista de la cámara
+            height: '400px', // Alto de la vista de la cámara
         },
 });
 

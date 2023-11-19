@@ -2,18 +2,17 @@ import React, { Component } from 'react';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image} from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
+import { FontAwesome } from '@expo/vector-icons';
 
 class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mg: this.props.infoPost.datos.likes.includes(auth.currentUser.email),
+            mg: false,
+            cantidadDeLikes: this.props.infoPost.datos.likes.length,
             comentarios: '',
             comentarioVacio: '',
-            posts: [],
-            borrarMsj: '',
-            borrar: false,
- 
+            posts: []
         }
     }
 
@@ -21,7 +20,7 @@ class Post extends Component {
         //Indicar si el post ya está likeado o no.
         if(this.props.infoPost.datos.likes.includes(auth.currentUser.email)){
             this.setState({
-                likes: true
+                mg: true
             })
         }
     }
@@ -35,7 +34,7 @@ class Post extends Component {
         .then( res => {
             this.setState({
                 mg: true,
-                cantidadDeLikes: this.props.infoPost.datos.likes.length
+                cantidadDeLikes: this.state.cantidadDeLikes + 1
             })
         })
         .catch( e => console.log(e))
@@ -49,7 +48,7 @@ class Post extends Component {
         .then( res => {
             this.setState({
                 mg: false,
-                cantidadDeLikes: this.props.infoPost.datos.likes.length
+                cantidadDeLikes: this.state.cantidadDeLikes - 1
             })
         })
         .catch( e => console.log(e))
@@ -69,11 +68,11 @@ class Post extends Component {
     }
 
     irPerfil(user) {
-        this.props.navigation.navigate("OtherProfile", { user: user })
+        this.props.navigation.navigate("Perfil", { user: user })
     }
 
     deleteMessage(){
-        this.setState({deleteMessage: 'Are you sure you want to delete this post?', delete: true})
+        this.setState({deleteMessage: 'Estas seguro de borrar el post?', delete: true})
     }
 
     deletePost(){
@@ -84,7 +83,17 @@ class Post extends Component {
         this.setState({deleteMessage: '', delete: false})
     }
    
-
+    deleteComment(commentTimestamp) {
+        const postId = this.props.infoPost.id;
+    
+        db.collection('posts').doc(postId).update({
+            comentarios: firebase.firestore.FieldValue.arrayRemove(
+                this.props.infoPost.datos.comentarios.find(c => c.createdAt === commentTimestamp)
+            ),
+        })
+       
+    }
+    
     render() {
         console.log(this.props);
         const date = this.props.infoPost.datos.createdAt
@@ -100,7 +109,7 @@ class Post extends Component {
                 <View style={styles.deleteContainer}>
                     {this.props.infoPost.datos.owner == auth.currentUser.email
                         ?
-                        <Text onPress={() => this.props.navigation.navigate("Profile")} style={styles.nameOne}>
+                        <Text onPress={() => this.props.navigation.navigate("MiPerfil")} style={styles.nameOne}>
                             {this.props.infoPost.datos.owner}
                         </Text>
                         :
@@ -123,9 +132,13 @@ class Post extends Component {
                     <View style={styles.like}>
 
                         {this.state.mg ?
-                            <TouchableOpacity onPress={() => this.disLike()}></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.disLike()}>
+                                 <FontAwesome name="heart" color="red" size={30} />
+                            </TouchableOpacity>
                             :
-                            <TouchableOpacity onPress={() => this.likear()}></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.likear()}>
+                                <FontAwesome name="heart" color="grey" size={30} />
+                            </TouchableOpacity>
                         }
                     </View>
                     <Text style={styles.likes}> {this.state.cantidadDeLikes} likes</Text>
@@ -134,7 +147,7 @@ class Post extends Component {
 
                 <View style={styles.comentarios}>
                     {!this.props.infoPost.datos.comentarios ?
-                        <Text style={styles.comentarios}>Todavia nadie comentó</Text>
+                        <Text style={styles.comentarios}>Aún no hay comentarios</Text>
                         :
                         <FlatList
                             data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
@@ -142,7 +155,9 @@ class Post extends Component {
 
                                 return item.createdAt.toString()
                             }}
-                            renderItem={({ item }) => <Text>{item.author}: {item.text}</Text>}
+                            renderItem={({ item }) => <Text>{item.author}: {item.text} <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
+                            <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
+                        </TouchableOpacity></Text>}
                         />
                     }
                     <TextInput
@@ -172,7 +187,7 @@ class Post extends Component {
                                 <TouchableOpacity onPress={() => this.deletePost()}>
                                     <Text style={styles.confirmationButton}>Yes</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.notDelete()}>
+                              <TouchableOpacity onPress={() => this.notDelete()}>
                                     <Text style={styles.denialButton}>No</Text>
                                 </TouchableOpacity>
                              </View>
