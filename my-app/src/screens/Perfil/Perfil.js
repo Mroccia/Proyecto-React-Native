@@ -44,6 +44,7 @@ class Perfil extends Component {
                     postUsuario: publicaciones
                 })
             }
+            
         )
         
   
@@ -60,14 +61,14 @@ render(){
                 (<ActivityIndicator size='large' color='orange'/>)
                 :
                 (<View>
-                  <Text>Usuario: {this.state.infoPost.datos.userName}</Text>
-                  <Text>Email: {this.state.infoPost.datos.email}</Text>
-                  {this.props.infoPost.datos.bio === "" ? 
-                  "": <Text>Mini bio: {this.props.infoPost.datos.bio}</Text>} 
-                  {this.props.infoPost.datos.photo === "" ? "" :
-                  <Image style={styles.camera}  source = {{uri: this.props.infoPost.datos.photo}}/> }
+                  <Text>Usuario: {this.state.infoUsuario.datos.userName}</Text>
+                  <Text>Email: {this.state.infoUsuario.datos.owner}</Text>
+                  {this.props.infoUsuario.datos.bio === "" ? 
+                  "": <Text>Mini bio: {this.props.infoUsuario.datos.bio}</Text>} 
+                  {this.props.infoUsuario.datos.photo === "" ? "" :
+                  <Image style={styles.camera}  source = {{uri: this.props.infoUsuario.datos.photo}}/> }
                   <Text>Cantidad de posteos: {this.props.posteos.length}</Text>
-                  {this.props.infoPost.datos.email == auth.currentUser.email ? 
+                  {this.props.infoUsuario.datos.email == auth.currentUser.email ? 
                   (<TouchableOpacity onPress={() => this.logOut()}>
                   <Text>Salir</Text>        
                   </TouchableOpacity>): ""}
@@ -81,7 +82,7 @@ render(){
                               <Text>Posteos</Text>
                               <Image style={styles.camera} source = {{uri:item.datos.url}}/>
                               <Text>Descripción: {item.datos.post}</Text>
-                              {this.props.infoPost.datos.owner == auth.currentUser.email ? 
+                              {this.props.infoUsuario.datos.owner == auth.currentUser.email ? 
                               (<TouchableOpacity onPress={() => this.borrarPost(item.id)}>
                               <Text>Borrar posteo</Text>        
                               </TouchableOpacity>): ""}

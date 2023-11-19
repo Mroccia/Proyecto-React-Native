@@ -73,7 +73,7 @@ class Home extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#819cab',
+      backgroundColor: '#rgb(255, 165, 0)',
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     containerHome: {
         alignContent: 'center',  
         textAlign: 'center',
-        backgroundColor: '#F4F4F1',
+        backgroundColor: '#rgb(255, 190, 0)',
         pading : 25,
     },
     header: {

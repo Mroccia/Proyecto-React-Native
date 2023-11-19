@@ -155,7 +155,7 @@ class Post extends Component {
 
                                 return item.createdAt.toString()
                             }}
-                            renderItem={({ item }) => <Text>{item.author}: {item.text} <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
+                            renderItem={({ item }) => <Text style={styles.mail}> {item.author}: {item.text} <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
                             <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
                         </TouchableOpacity></Text>}
                         />
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
         marginTop: '5%',
     },
     button: {
-        backgroundColor: 'rgb(255, 51, 0)',
+        backgroundColor: 'rgb(0, 128, 0)',
         borderRadius: '30px',
         marginTop: '1%',
         margin: '2%',
@@ -245,6 +245,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 15,
         color: 'white',
+        color: 'rgb(40, 40, 40)'
     },
     error: {
         color: 'red',
@@ -279,10 +280,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         alignSelf: 'flex-start'
     },
-    comments: {
-        fontSize: 15,
-        alignSelf: 'center',
-        margin: 10
+    comentarios: {
+        backgroundColor: '#4CAF50',
+        marginLeft: 8,
+        padding: 8,
+        borderRadius: 4,
     },    
     deleteContainer:{
         display: 'flex',
@@ -334,6 +336,20 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         padding: 10,
         borderColor: 'white',
+    },
+    deleteCommentButton: {
+        flex: 1,
+        padding: 8,
+        borderColor: 'grey',
+        backgroundColor: 'rgb(0, 128, 0)',
+        borderWidth: 1,
+        borderRadius: 4,
+        textAlign: 'center',
+        color: 'rgb(40, 40, 40)'
+    },
+    mail: {
+        color: 'white',
+        textAlign: 'right',
     }
 });
 

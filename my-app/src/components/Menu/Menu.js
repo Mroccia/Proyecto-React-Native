@@ -20,37 +20,11 @@ function Menu (){
                 }
             }}>
             <Tab.Screen name='BURGERDAY' component={Home} options={{tabBarLabel: 'BURGERDAY', headerTintColor: 'brown'}}/>
-            <Tab.Screen name='Postear' component={PostForm} color="green"/>
-            <Tab.Screen name='Miperfil' component={MiPerfil} color="green"/>
+            <Tab.Screen name='PUBLICA AQUI TU CARITA LINDO ;3' component={PostForm} options={{tabBarLabel: 'POSTEAR', headerTintColor: 'brown'}}/>
+            <Tab.Screen name='BIENVENIDO AL PERFIL' component={MiPerfil} options={{tabBarLabel: 'MI PERFIL', headerTintColor: 'brown'}}/>
         </Tab.Navigator> 
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#2c3e50',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    header: {
-      backgroundColor: '#2c3e50',
-      color: '#fff',
-      padding: 20,
-      textAlign: 'center'
-    },
-    nav: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#34495e',
-        padding: 10,
-      },
-      navText: {
-        color: '#fff',
-        textDecorationLine: 'none',
-        padding: 10,
-      },
-})
 
 
 export default Menu;
