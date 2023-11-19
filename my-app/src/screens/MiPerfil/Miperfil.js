@@ -1,121 +1,153 @@
 import React, { Component } from 'react';
 import { auth, db } from '../../firebase/config';
-import { updatePassword } from "firebase/auth";
-import {TextInput, TouchableOpacity, View, Text, StyleSheet, Image, FlatList} from "react-native";
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, Image, FlatList } from "react-native";
 import Post from "../../components/Post/Post";
-
-
 
 class MiPerfil extends Component {
     constructor() {
         super();
         this.state = {
             data: [],
-            nuevaPassword:"",
+            nuevaPassword: "",
             nombreDeUsuario: "",
-            usuarioLogueado: auth.currentUser.email,
-            posteos: [] 
-        }
+            usuarioLogueado: auth.currentUser ? auth.currentUser.email : "", // Asegurarse de que `auth.currentUser` no sea nulo
+            posteos: []
+        };
     }
 
     componentDidMount() {
-        db.collection('users').where("owner", "==", this.state.usuarioLogueado).onSnapshot(
+        const { usuarioLogueado } = this.state;
+
+        if (!usuarioLogueado) {
+            // Si el usuario no está logueado, redirige a la página de login
+            this.props.navigation.navigate('Login');
+            return;
+        }
+
+        db.collection('users').where("owner", "==", usuarioLogueado).onSnapshot(
             docs => {
                 let user = [];
                 docs.forEach(doc => {
                     user.push({
                         id: doc.id,
                         data: doc.data()
-                    })
-                })
+                    });
+                });
                 this.setState({
                     data: user,
-                })
+                });
                 console.log("User data:", user);
             }
+        );
 
-        )
-
-        db.collection("posts").where("owner", "==", this.state.usuarioLogueado).onSnapshot(
-            docs =>{
-              let showPosteos = [];
-              docs.forEach(doc=> {
-                showPosteos.push({
-                    id: doc.id,
-                    data: doc.data()
-                })
-              })
-              this.setState({posteos: showPosteos})
+        db.collection("posts").where("owner", "==", usuarioLogueado).onSnapshot(
+            docs => {
+                let showPosteos = [];
+                docs.forEach(doc => {
+                    showPosteos.push({
+                        id: doc.id,
+                        data: doc.data()
+                    });
+                });
+                this.setState({ posteos: showPosteos });
             }
-          )
+        );
     }
 
-    logout(){
+    logout() {
         auth.signOut();
         this.props.navigation.navigate('Login');
     }
 
-    
-
     render() {
-       console.log(this.state.data)
-       console.log(this.state.posteos)
-       console.log(this.state.usuarioLogueado)
-        
+        const { data, posteos, usuarioLogueado } = this.state;
+
         return (
-            <View style = {styles.container}>
+            <View style={styles.container}>
+                {data.length > 0 && (
+                    <FlatList
+                        data={data}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <View style={styles.user}>
+                                <Image style={styles.profileImage} source={{ uri: item.data.urlImage }} />
+                                <View style={styles.userData}>
+                                    <Text style={styles.userName}>{item.data.userName}</Text>
+                                    <Text style={styles.userEmail}>{usuarioLogueado}</Text>
+                                    <Text style={styles.userBio}>{item.data.miniBio}</Text>
+                                    <Text style={styles.userPostCount}>Cantidad de posteos: {posteos.length}</Text>
+                                </View>
+                            </View>
+                        )}
+                    />
+                )}
 
+                <Text>Mis posteos</Text>
                 <FlatList
-                    data={this.state.data}
+                    data={posteos}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        
                         <View>
-                           <Text>Nombre - {item.data.userName}</Text>
-                           <Image style={styles.profileImage} source={{ uri: item.data.urlImage }} />
-                           <Text>Mail del user - {this.state.usuarioLogueado} </Text>
-                           <Text>{item.data.miniBio} </Text>
-                           <Text> Cantidad de posteos: </Text>
+                            <Text>{item.data.textPost}</Text>
+                            <Post dataPost={item} navigation={this.props.navigation} />
                         </View>
                     )}
-                />
-                <Text> Mis posteos</Text>
-                <FlatList
-                    data={this.state.posteos}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View >
-                           <Text>{item.data.textPost}</Text>
-                           <Post dataPost={item} navigation={this.props.navigation}/>
-           
-                        </View>
-                    )}
-                    
                 />
 
-                <TouchableOpacity style= {styles.nav} onPress={() => this.logout()}>
-                    <Text> Cerrar sesión</Text>
+                <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
+                    <Text>Cerrar sesión</Text>
                 </TouchableOpacity>
-                
             </View>
-
-        )
+        );
     }
 }
+
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#2c3e50',
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 1,
+        backgroundColor: '#2c3e50',
+        justifyContent: 'center',
+        padding: 16,
     },
-    nav: {
+    user: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#34495e',
-        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-
-})
+    profileImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        marginRight: 16,
+    },
+    userData: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+    },
+    userName: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'grey'
+    },
+    userEmail: {
+        fontSize: 16,
+        color: 'grey',
+    },
+    userBio: {
+        fontSize: 14,
+        marginVertical: 8,
+    },
+    userPostCount: {
+        fontSize: 16,
+    },
+    logoutButton: {
+        backgroundColor: '#rgb(60, 60, 60)',
+        padding: 12,
+        borderRadius: 4,
+        marginTop: 16,
+        alignItems: 'center',
+    },
+});
 
 export default MiPerfil;

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { auth, db } from '../../firebase/config';
-import { View, Text, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 
 class Perfil extends Component {
   constructor(){
@@ -61,22 +61,22 @@ render(){
                 (<ActivityIndicator size='large' color='orange'/>)
                 :
                 (<View>
-                  <Text>Usuario: {this.state.infoUsuario.datos.userName}</Text>
+                  <Text >Usuario: {this.state.infoUsuario.datos.userName}</Text>
                   <Text>Email: {this.state.infoUsuario.datos.owner}</Text>
                   {this.props.infoUsuario.datos.bio === "" ? 
                   "": <Text>Mini bio: {this.props.infoUsuario.datos.bio}</Text>} 
                   {this.props.infoUsuario.datos.photo === "" ? "" :
                   <Image style={styles.camera}  source = {{uri: this.props.infoUsuario.datos.photo}}/> }
-                  <Text>Cantidad de posteos: {this.props.posteos.length}</Text>
+                  <Text>Cantidad de posteos: {this.props.postUsuario.length}</Text>
                   {this.props.infoUsuario.datos.email == auth.currentUser.email ? 
                   (<TouchableOpacity onPress={() => this.logOut()}>
                   <Text>Salir</Text>        
                   </TouchableOpacity>): ""}
-                  {this.props.posteos.length === 0?
-                     "":
+                  {this.props.postUsuario.length === 0?
+                     <Text>no tiene posteos</Text>:
                       (<FlatList
-                      data = {this.props.posteos}
-                      keyExtractor={(post) => post.id}
+                      data = {this.props.postUsuario} 
+                      keyExtractor={ doc => doc.createdAt}
                       renderItem = {({item}) => (
                           <View>
                               <Text>Posteos</Text>
@@ -95,5 +95,23 @@ render(){
 }
 
 }
+const styles = StyleSheet.create({
+    deleteCommentButton: {
+        flex: 1,
+        padding: 8,
+        borderColor: 'grey',
+        backgroundColor: 'rgb(0, 128, 0)',
+        borderWidth: 1,
+        borderRadius: 4,
+        textAlign: 'center',
+        color: 'rgb(40, 40, 40)'
+    },
+        container: {
+        flex: 1, 
+        alignItems: 'center',
+        justifyContent: 'center',
+            width: '100%'
+    },
+})
 
 export default Perfil;
