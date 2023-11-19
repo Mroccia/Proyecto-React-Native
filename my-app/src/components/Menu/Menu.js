@@ -3,7 +3,7 @@ import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList} from 'rea
 import Home from '../../screens/Home/Home';
 import PostForm from '../../screens/PostForm/PostForm';
 import MiPerfil from '../../screens/MiPerfil/Miperfil';
-
+import Resultados from '../../screens/Resultados/Resultados';
 
 const Tab = createBottomTabNavigator();
 

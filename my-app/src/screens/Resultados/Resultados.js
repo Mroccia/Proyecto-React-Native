@@ -12,11 +12,10 @@ class Resultados extends Component{
         }
     }
 
-buscador(){
-
-    db.collection('users').where('owner', '>=', this.state.buscado).where('owner', '<=', this.state.buscado + '\uf8ff').onSnapshot(
-    usuariosOwner => {
-        db.collection('users').where('userName', '>=', this.state.buscado).where('email', '<=',this.state.buscado + '\uf8ff' ).onSnapshot(
+    buscador = () => {
+        db.collection('users').where('owner', '>=', this.state.buscado).where('owner', '<=', this.state.buscado + '\uf8ff').onSnapshot(
+            usuariosOwner => {
+        db.collection('users').where('email', '>=', this.state.buscado).where('email', '<=',this.state.buscado + '\uf8ff' ).onSnapshot(
             (usuariosEmail => {
                 const users = []    ;
                 usuariosOwner.forEach(user => {
@@ -55,34 +54,40 @@ buscador(){
    
 }
     
-    render(){
-        console.log(this.state.results)
-        return(
-            <View style = {styles.container}> 
-                 <TextInput
-                    style={styles.textinput}
-                    onChangeText={(text)=>{this.setState({buscado: text}), this.buscador()}}
-                    placeholder='Buscar usuario o email'
-                    keyboardType='default'
-                    value={this.state.buscado}
-                    />
-                {this.state.results.length === 0?
-                (<Text>Ningun usuario concuerda con tu búsqueda</Text>):
-                (
-                <FlatList
-                    data = {this.state.results}
-                    keyExtractor={(user, index) => user.id + index}
-                    renderItem = {({item}) => (
-                        <View style = {styles.results}>
-                            <TouchableOpacity onPress={() =>this.props.navigation.navigate('Perfil', {owner: item.datos.owner})}>
-                                <Text>{item.datos.owner} - {item.datos.email}</Text>
-                            </TouchableOpacity> 
-                        </View>
-                    )} 
-                    />)}
-            </View>
-        )
-    }
+render() {
+    console.log(this.state.results);
+    return (
+        <View style={styles.container}>
+            <TextInput
+                style={styles.textinput}
+                onChangeText={(text) => this.setState({ buscado: text })}
+                placeholder='Buscar usuario o email'
+                keyboardType='default'
+                value={this.state.buscado}
+            />
+
+
+            {this.state.results.length === 0 && this.state.buscado.length > 0 ?
+                <Text>Ningún usuario coincide con tu búsqueda</Text> :
+                this.state.results.length > 0 ?
+                    <FlatList
+                        data={this.state.results}
+                        keyExtractor={(user, index) => user.id + index}
+                        renderItem={({ item }) => (
+                            <View style={styles.results}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Perfil', { owner: item.datos.owner })}>
+                                    <Text>{item.datos.owner} - {item.datos.email}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    /> :
+                    <Text>Realiza una búsqueda para ver los resultados</Text>
+            }
+        </View>
+    );
+}
+
+
 }
 const styles = StyleSheet.create({
 container: {
