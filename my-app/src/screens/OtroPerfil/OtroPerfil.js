@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import { auth, db } from '../../firebase/config';
-import { View, Text, ActivityIndicator, FlatList, StyleSheet} from 'react-native';
+import { View, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import User from '../../components/User/User';
 
 
-class MiPerfil extends Component {
+class OtroPerfil extends Component {
     constructor(){
         super();
         this.state = 
@@ -17,7 +17,7 @@ class MiPerfil extends Component {
 componentDidMount(){
     auth.onAuthStateChanged( user => {
         if( user ){
-            db.collection('users').where('owner', '==',auth.currentUser.email).onSnapshot(
+            db.collection('users').where('owner', '==',this.props.route.params.owner).onSnapshot(
                 usuarios => {
                     let users = [];
                     usuarios.forEach(user =>
@@ -29,25 +29,26 @@ componentDidMount(){
                 this.setState({
                     infoUsuario: users
                 })
+                db.collection('posts').where('owner', '==', this.props.route.params.owner).onSnapshot(
+                    posteos => {
+                        let publicaciones = [];
+                        posteos.forEach(post =>
+                            {publicaciones.push({
+                                id: post.id,
+                                datos: post.data()
+                            })})
+                        this.setState({
+                            postUsuario: publicaciones
+                        })
+                    }
+                )
             }
             )
         } else{
             this.props.navigation.navigate('Login')
         }
 
-        db.collection('posts').where('owner', '==', auth.currentUser.email).onSnapshot(
-            posteos => {
-                let publicaciones = [];
-                posteos.forEach(post =>
-                    {publicaciones.push({
-                        id: post.id,
-                        datos: post.data()
-                    })})
-                this.setState({
-                    postUsuario: publicaciones
-                })
-            }
-        )
+        
         
   
     }
@@ -74,11 +75,10 @@ render(){
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1, 
-      alignItems: 'center',
-    justifyContent: 'center',
-        width: '100%'
+    flex: 1, 
+    alignItems: 'center',
+    justifyContent: 'center'
     },
   });
 
-export default MiPerfil;
+export default OtroPerfil;

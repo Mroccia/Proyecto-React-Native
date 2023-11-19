@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { db, auth } from '../../firebase/config';
 import Camara from '../../components/Camara/Camara';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
+import {TextInput, TouchableOpacity, View, Image, Text, StyleSheet} from 'react-native';
 
 class PostForm extends Component {
     constructor() {
@@ -34,7 +34,7 @@ class PostForm extends Component {
         .catch(e => console.log(e));
     }
 
-    traerUrlDeFoto(url) {
+    onImageUpload(url){
         this.setState({
             foto: url,
             camera: false
@@ -48,7 +48,7 @@ class PostForm extends Component {
 
                 {this.state.camera ? (
                     <View style={styles.camera}>
-                        <Camara traerUrlDeFoto={(url) => this.traerUrlDeFoto(url)} style={styles.camera} />
+                        <Camara onImageUpload={(url) => this.onImageUpload(url)} style={styles.camera}/> 
                     </View>
                 ) : (
                     <Image style={styles.img} source={{ uri: this.state.foto }} />
@@ -60,14 +60,9 @@ class PostForm extends Component {
                     onChangeText={text => this.setState({ textoPost: text })}
                     value={this.state.textoPost}
                 />
-
-                {this.state.foto === '' ? (
-                    <Text style={styles.error}>Tienes que subir una imagen</Text>
-                ) : (
-                    <TouchableOpacity onPress={() => this.crearPost(auth.currentUser.email, this.state.textoPost, this.state.foto, Date.now())}>
-                        <Text style={styles.button}>Postear</Text>
-                    </TouchableOpacity>
-                )}
+                <TouchableOpacity onPress={()=>this.crearPost(this.state.owner, this.state.textoPost, this.state.foto)}>
+                    <Text style={styles.input} >Publicar posteo</Text>
+                </TouchableOpacity>
             </View>
         );
     }
