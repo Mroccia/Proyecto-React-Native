@@ -30,10 +30,6 @@ class Register extends Component {
 
     register(email, pass, userName) {
 
-        this.state.email == '' || this.state.password == '' || this.state.userName == '' ? 
-        this.setState({error: 'Debe completar el email, el username y la contraseña para enviar este formulario.'})
-        :
-
         auth.createUserWithEmailAndPassword(email, pass)
           .then(response => {
             const user = response.user;
@@ -70,6 +66,9 @@ class Register extends Component {
       
       
     render(){
+
+      const { email, password, userName } = this.state;
+    const ButtonDisabled = !email || !password || !userName;
         return(
             <ImageBackground
             source={require('../../../assets/fondo2.jpg')}
@@ -119,8 +118,12 @@ class Register extends Component {
                     keyboardType='default'
                     value={this.state.profileImage}
                 />
-                <TouchableOpacity style={styles.button} onPress={()=>this.register(this.state.email, this.state.password, this.state.userName)}>
-                    <Text style={styles.textButton}>Registrarse</Text>    
+                   <TouchableOpacity
+                    style={[styles.button, { opacity: ButtonDisabled ? 0.5 : 1 }]}
+                    onPress={() => this.register(email, password, userName)}
+                    disabled={ButtonDisabled}
+                >
+                    <Text style={styles.textButton}>Registrarse</Text>
                 </TouchableOpacity>
                 <Text style={{ color: 'red' }}>{this.state.error}</Text>
 
