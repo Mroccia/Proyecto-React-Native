@@ -69,7 +69,7 @@ class Post extends Component {
     }
 
     irPerfil(user) {
-        this.props.navigation.navigate("Perfil", { user: user })
+        this.props.navigation.navigate("OtroPerfil", { user: user })
     }
 
     deleteMessage(){
@@ -105,25 +105,15 @@ class Post extends Component {
 
         return (
             <View style={styles.postContainer}>
-
-
-                <View style={styles.deleteContainer}>
-                    {this.props.infoPost.datos.owner == auth.currentUser.email
-                        ?
-                        <Text onPress={() => this.props.navigation.navigate("MiPerfil")} style={styles.nameOne}>
-                            {this.props.infoPost.datos.owner}
-                        </Text>
-                        :
-                        <Text onPress={() => this.irPerfil(this.props.infoPost.datos.owner)} style={styles.nameOne}>
-                            {this.props.infoPost.datos.owner}
-                        </Text>
-                    }
-
-                </View>
-
-
-                <Image style={styles.img} source={{ uri: this.props.infoPost.datos.urlImg }} />
-               
+                <TouchableOpacity onPress={() => {if (this.props.infoPost.datos.owner == auth.currentUser.email){
+                        this.props.navigation.navigate("MiPerfil")
+                    }else{
+                        this.props.navigation.navigate('OtroPerfil', {owner: this.props.infoPost.datos.owner})
+                    }}
+                       }>
+                        <Text style = {styles.usuario}>{this.props.infoPost.datos.owner}</Text>
+                </TouchableOpacity>
+                <Image style={styles.img} source={{ uri: this.props.infoPost.datos.foto }} />
                 <Text style={styles.bio}>
                     {this.props.infoPost.datos.post}  
                 </Text>                

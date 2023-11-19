@@ -10,8 +10,7 @@ class Register extends Component {
             userName:'',
             password:'',
             bio: '', 
-            profileImage: '',
-         
+            profileImage: ''
         }
     }
     componentDidMount(){

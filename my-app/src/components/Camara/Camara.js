@@ -12,7 +12,7 @@ class Camara extends Component {
             permisos: false,
             urlImg: ''
         }
-        this.metodosDeCamara = ''
+        this.metodosCamara = ''
     }
 
 
@@ -27,8 +27,8 @@ class Camara extends Component {
     }
 
     takePicture(){
-        console.log(this.metodosDeCamara);
-        this.metodosDeCamara.takePictureAsync()
+        console.log(this.metodosCamara);
+        this.metodosCamara.takePictureAsync()
          .then(foto => {
             this.setState({
                 urlImg: foto.uri, 
@@ -71,7 +71,7 @@ class Camara extends Component {
                     <Camera
                     style={styles.camera}
                     type={Camera.Constants.Type.front}
-                    ref = { (metodos) => this.metodosDeCamara = metodos }
+                    ref = { (metodosCamara) => this.metodosCamara = metodosCamara }
                     />
 
                     <View style={styles.button}>
