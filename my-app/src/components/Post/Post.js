@@ -64,6 +64,7 @@ class Post extends Component {
                     comentarios: firebase.firestore.FieldValue.arrayUnion({ owner: auth.currentUser.email, text: this.state.comentarios, author: auth.currentUser.email, createdAt: Date.now() })
                 })
                 .then(this.setState({ comentarios: '' }))
+                .then(this.setState({comentarioVacio: ''}))
                 .catch(e => console.log('Error' + e))
     }
 
@@ -150,15 +151,20 @@ class Post extends Component {
                         <Text style={styles.comentarios}>Aún no hay comentarios</Text>
                         :
                         <FlatList
-                            data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
-                            keyExtractor={item => {
+                        data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
+                        keyExtractor={item => item.createdAt.toString()}
+                        renderItem={({ item }) => (
+                            <View style={styles.commentContainer}>
+                                <Text>{item.author}: {item.text}</Text>
+                                {auth.currentUser.email === item.author && (
+                                    <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
+                                        <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        )}
+                    />
 
-                                return item.createdAt.toString()
-                            }}
-                            renderItem={({ item }) => <Text style={styles.mail}> {item.author}: {item.text} <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
-                            <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
-                        </TouchableOpacity></Text>}
-                        />
                     }
                     <TextInput
                         keyboardType='default'
