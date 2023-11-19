@@ -27,31 +27,5 @@ function Menu (){
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#2c3e50',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    header: {
-      backgroundColor: '#2c3e50',
-      color: '#fff',
-      padding: 20,
-      textAlign: 'center'
-    },
-    nav: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#34495e',
-        padding: 10,
-      },
-      navText: {
-        color: '#fff',
-        textDecorationLine: 'none',
-        padding: 10,
-      },
-})
-
 
 export default Menu;

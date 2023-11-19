@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image} from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
@@ -9,65 +9,73 @@ class Post extends Component {
         super(props);
         this.state = {
             mg: false,
-            cantidadDeLikes: this.props.infoPost.datos.likes.length,
+            cantidadDeLikes: props.infoPost.datos.likes.length,
             comentarios: '',
             comentarioVacio: '',
-            posts: []
-        }
+        };
     }
 
-    componentDidMount(){
-        //Indicar si el post ya está likeado o no.
-        if(this.props.infoPost.datos.likes.includes(auth.currentUser.email)){
-            this.setState({
-                mg: true
-            })
-        }
-    }
-
-
-    likear(){
-        db.collection('posts').doc(this.props.infoPost.id)
-        .update({
-            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
-        })
-        .then( res => {
+    componentDidMount() {
+        // Indicar si el post ya está likeado o no.
+        if (this.props.infoPost.datos.likes.includes(auth.currentUser.email)) {
             this.setState({
                 mg: true,
-                cantidadDeLikes: this.state.cantidadDeLikes + 1
-            })
-        })
-        .catch( e => console.log(e))
+            });
+        }
     }
 
-   disLike(){
-        db.collection('posts').doc(this.props.infoPost.id)
-        .update({
-            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-        })
-        .then( res => {
+    async likear() {
+        try {
+            await db.collection('posts').doc(this.props.infoPost.id).update({
+                likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email),
+            });
+            this.setState({
+                mg: true,
+                cantidadDeLikes: this.state.cantidadDeLikes + 1,
+            });
+        } catch (error) {
+            console.log('Error en likear:', error);
+        }
+    }
+
+    async disLike() {
+        try {
+            await db.collection('posts').doc(this.props.infoPost.id).update({
+                likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email),
+            });
             this.setState({
                 mg: false,
-                cantidadDeLikes: this.state.cantidadDeLikes - 1
-            })
-        })
-        .catch( e => console.log(e))
+                cantidadDeLikes: this.state.cantidadDeLikes - 1,
+            });
+        } catch (error) {
+            console.log('Error en disLike:', error);
+        }
     }
 
     onSubmit() {
-        this.state.comentarios == '' ?
-            this.setState({ comentarioVacio: 'necesitas escribir algo' })
-            :
+        if (this.state.comentarios === '') {
+            this.setState({ comentarioVacio: 'Necesitas escribir algo' });
+        } else {
             db.collection('posts')
                 .doc(this.props.infoPost.id)
                 .update({
-                    comentarios: firebase.firestore.FieldValue.arrayUnion({ owner: auth.currentUser.email, text: this.state.comentarios, author: auth.currentUser.email, createdAt: Date.now() })
+                    comentarios: firebase.firestore.FieldValue.arrayUnion({
+                        owner: auth.currentUser.email,
+                        text: this.state.comentarios,
+                        author: auth.currentUser.email,
+                        createdAt: Date.now(),
+                    }),
                 })
-                .then(this.setState({ comentarios: '' }))
-                .then(this.setState({comentarioVacio: ''}))
-                .catch(e => console.log('Error' + e))
+                .then(() => {
+                    this.setState({ comentarios: '', comentarioVacio: '' });
+                })
+                .catch((error) => {
+                    console.log('Error en onSubmit:', error);
+                });
+        }
     }
 
+<<<<<<< HEAD
     irPerfil(user) {
         this.props.navigation.navigate("OtroPerfil", { user: user })
     }
@@ -84,25 +92,30 @@ class Post extends Component {
         this.setState({deleteMessage: '', delete: false})
     }
    
+=======
+>>>>>>> 290ea06c4594c9bc023c8c270fbd25ccd3ed18f9
     deleteComment(commentTimestamp) {
         const postId = this.props.infoPost.id;
-    
-        db.collection('posts').doc(postId).update({
-            comentarios: firebase.firestore.FieldValue.arrayRemove(
-                this.props.infoPost.datos.comentarios.find(c => c.createdAt === commentTimestamp)
-            ),
-        })
-       
+
+        db.collection('posts')
+            .doc(postId)
+            .update({
+                comentarios: firebase.firestore.FieldValue.arrayRemove(
+                    this.props.infoPost.datos.comentarios.find((c) => c.createdAt === commentTimestamp)
+                ),
+            })
+            .catch((error) => {
+                console.log('Error en deleteComment:', error);
+            });
     }
-    
+
     render() {
-        console.log(this.props);
-        const date = this.props.infoPost.datos.createdAt
-
-        const d = Date(date);
-
-        const fecha = d.toString()
-
+        const { infoPost, navigation } = this.props;
+        const { mg, cantidadDeLikes, comentarios, comentarioVacio, showComments } = this.state;
+    
+        const date = infoPost.datos.createdAt;
+        const fecha = new Date(date).toString();
+    
         return (
             <View style={styles.postContainer}>
                 <TouchableOpacity onPress={() => {if (this.props.infoPost.datos.owner == auth.currentUser.email){
@@ -119,90 +132,62 @@ class Post extends Component {
                 </Text>                
 
                 <View style={styles.likesContainer}>
-
                     <View style={styles.like}>
-
-                        {this.state.mg ?
+                        {mg ? (
                             <TouchableOpacity onPress={() => this.disLike()}>
-                                 <FontAwesome name="heart" color="red" size={30} />
+                                <FontAwesome name="heart" color="red" size={30} />
                             </TouchableOpacity>
-                            :
+                        ) : (
                             <TouchableOpacity onPress={() => this.likear()}>
                                 <FontAwesome name="heart" color="grey" size={30} />
                             </TouchableOpacity>
-                        }
-                    </View>
-                    <Text style={styles.likes}> {this.state.cantidadDeLikes} likes</Text>
-                </View>
-
-
-                <View style={styles.comentarios}>
-                    {!this.props.infoPost.datos.comentarios ?
-                        <Text style={styles.comentarios}>Aún no hay comentarios</Text>
-                        :
-                        <FlatList
-                        data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
-                        keyExtractor={item => item.createdAt.toString()}
-                        renderItem={({ item }) => (
-                            <View style={styles.commentContainer}>
-                                <Text>{item.author}: {item.text}</Text>
-                                {auth.currentUser.email === item.author && (
-                                    <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
-                                        <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
-                                    </TouchableOpacity>
-                                )}
-                            </View>
                         )}
-                    />
-
-                    }
-                    <TextInput
-                        keyboardType='default'
-                        placeholder=' Escribi un comentario'
-                        onChangeText={text => this.setState({ comentarios: text })}
-                        value={this.state.comentarios}
-                        style={styles.field}
-                    />
-
-                    <Text style={styles.error}>{this.state.comentarioVacio}</Text>
-
-                    <TouchableOpacity onPress={() => this.onSubmit()}>
-                        <Text style={styles.button}>Agregar comentario</Text>
-                    </TouchableOpacity>
-
-                    {
-                        this.props.infoPost.datos.owner == auth.currentUser.email ?
-                        <>
-                            <TouchableOpacity onPress={() => this.deleteMessage()}>
-                                <Text style={styles.deletebutton}>Delete post</Text>
-                            </TouchableOpacity>
-
-                             <Text style={styles.deleteMessage}>{this.state.deleteMessage}</Text>
-                            {this.state.delete  ?
-                             <View style={styles.deleteContainer}>
-                                <TouchableOpacity onPress={() => this.deletePost()}>
-                                    <Text style={styles.confirmationButton}>Yes</Text>
-                                </TouchableOpacity>
-                              <TouchableOpacity onPress={() => this.notDelete()}>
-                                    <Text style={styles.denialButton}>No</Text>
-                                </TouchableOpacity>
-                             </View>
-                            :
-                            <></>
-                             }
-                        </>
-                        :
-                        <></>
-                    }
-                    
-                    <Text style={styles.postedOn}> 
-                    Posted on {fecha}
-                    </Text>
-
+                    </View>
+                    <Text style={styles.likes}>{cantidadDeLikes} likes</Text>
                 </View>
-
+    
+                {showComments && (
+                    <View style={styles.comentarios}>
+                        <Text style={styles.comentariosContador}>Cantidad de comentarios: {infoPost.datos.comentarios.length}</Text>
+                        {!infoPost.datos.comentarios ? (
+                            <Text style={styles.comentarios}>Aún no hay comentarios</Text>
+                        ) : (
+                            <FlatList
+                                data={infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
+                                keyExtractor={(item) => item.createdAt.toString()}
+                                renderItem={({ item }) => (
+                                    <View style={styles.commentContainer}>
+                                        <Text>{item.author}: {item.text}</Text>
+                                        {auth.currentUser.email === item.author && (
+                                            <TouchableOpacity onPress={() => this.deleteComment(item.createdAt)}>
+                                                <Text style={styles.deleteCommentButton}>Borrar comentario</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                )}
+                            />
+                        )}
+                        <TextInput
+                            keyboardType="default"
+                            placeholder="Escribi un comentario"
+                            onChangeText={(text) => this.setState({ comentarios: text })}
+                            value={comentarios}
+                            style={styles.field}
+                        />
+                        <Text style={styles.error}>{comentarioVacio}</Text>
+                        <TouchableOpacity onPress={() => this.onSubmit()}>
+                            <Text style={styles.button}>Agregar comentario</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.postedOn}>Posted on {fecha}</Text>
+                    </View>
+                )}
+                <TouchableOpacity onPress={() => this.setState({ showComments: !showComments })}>
+                    <Text style={styles.comentariosContador}>
+                        {showComments ? 'Ocultar Comentarios' : 'Mostrar Comentarios'}
+                    </Text>
+                </TouchableOpacity>
             </View>
-        )
+        );
     }
 }
 
@@ -233,7 +218,7 @@ const styles = StyleSheet.create({
         marginTop: '5%',
     },
     button: {
-        backgroundColor: 'rgb(255, 51, 0)',
+        backgroundColor: 'rgb(0, 128, 0)',
         borderRadius: '30px',
         marginTop: '1%',
         margin: '2%',
@@ -241,6 +226,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 15,
         color: 'white',
+        color: 'rgb(40, 40, 40)'
     },
     error: {
         color: 'red',
@@ -275,10 +261,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         alignSelf: 'flex-start'
     },
-    comments: {
-        fontSize: 15,
-        alignSelf: 'center',
-        margin: 10
+    comentarios: {
+        backgroundColor: '#4CAF50',
+        marginLeft: 8,
+        padding: 8,
+        borderRadius: 4,
     },    
     deleteContainer:{
         display: 'flex',
@@ -330,7 +317,26 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         padding: 10,
         borderColor: 'white',
-    }
+    },
+    deleteCommentButton: {
+        flex: 1,
+        padding: 8,
+        borderColor: 'grey',
+        backgroundColor: 'rgb(0, 128, 0)',
+        borderWidth: 1,
+        borderRadius: 4,
+        textAlign: 'center',
+        color: 'rgb(40, 40, 40)'
+    },
+    mail: {
+        color: 'white',
+        textAlign: 'right',
+    },
+    comentariosContador: {
+        fontSize: 8,
+        fontWeight: 'bold',
+        color: 'black'
+    },
 });
 
 

@@ -10,7 +10,8 @@ class Camara extends Component {
         this.state = {
             mostraCamara: true,
             permisos: false,
-            urlImg: ''
+            urlImg: '',
+            imagenseleccionada: false
         }
         this.metodosCamara = ''
     }
@@ -38,6 +39,8 @@ class Camara extends Component {
     }
 
     savePhoto(){
+        this.setState({imagenseleccionada: true});
+
         fetch(this.state.urlImg)
         .then(res=>res.blob())
         .then(image =>{
@@ -59,7 +62,7 @@ class Camara extends Component {
             urlImg: ''
         })
     }
-    
+
     render() {
         return (
         <>
