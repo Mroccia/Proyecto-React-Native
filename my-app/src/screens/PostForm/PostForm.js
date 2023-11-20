@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
         height: 400,
     },
     img: {
-        width: 200,
-        height: 200,
-        margin: 30
+        flex: 1, 
+        width: '100%', 
+        height: '100%',
     },
     error: {
         color: 'red',

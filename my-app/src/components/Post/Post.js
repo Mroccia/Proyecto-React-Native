@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, FlatList, Image, Alert } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ class Post extends Component {
             cantidadDeLikes: props.infoPost.datos.likes.length,
             comentarios: '',
             comentarioVacio: '',
+            showComments: false, // Nuevo estado para controlar la visibilidad de los comentarios
         };
     }
 
@@ -68,8 +69,9 @@ class Post extends Component {
                 })
                 .then(() => {
                     this.setState({
-                    comentarios: '',
-                    comentarioVacio: '' });
+                        comentarios: '',
+                        comentarioVacio: '',
+                    });
                 })
                 .catch((error) => {
                     console.log('Error en onSubmit:', error);
@@ -80,14 +82,14 @@ class Post extends Component {
         this.setState({deleteMessage: 'Estas seguro de borrar el post?', delete: true})
     }
 
-    deletePost(){
+    deletePost() {
         db.collection('posts').doc(this.props.infoPost.id).delete()
     }
 
-    notDelete(){
-        this.setState({deleteMessage: '', delete: false})
+    notDelete() {
+        this.setState({ deleteMessage: '', delete: false })
     }
-   
+
     deleteComment(commentTimestamp) {
         const postId = this.props.infoPost.id;
 
@@ -98,9 +100,20 @@ class Post extends Component {
                     this.props.infoPost.datos.comentarios.find((c) => c.createdAt === commentTimestamp)
                 ),
             })
+            .then(() => {
+                this.setState({ comentarios: '', comentarioVacio: '' });
+                Alert.alert('Comentario eliminado', 'El comentario se eliminó exitosamente.');
+            })
             .catch((error) => {
                 console.log('Error en deleteComment:', error);
             });
+    }
+
+    // Método para alternar la visibilidad de los comentarios
+    toggleComments() {
+        this.setState((prevState) => ({
+            showComments: !prevState.showComments,
+        }));
     }
 
     render() {
@@ -122,8 +135,8 @@ class Post extends Component {
                 </View>
                 <Image style={styles.img} source={{ uri: this.props.infoPost.datos.foto }} />
                 <Text style={styles.bio}>
-                    {this.props.infoPost.datos.post}  
-                </Text>                
+                    {this.props.infoPost.datos.textoPost}
+                </Text>
 
                 <View style={styles.likesContainer}>
                     <View style={styles.like}>
@@ -140,21 +153,29 @@ class Post extends Component {
                     <Text style={styles.likes}>{this.state.cantidadDeLikes} likes</Text>
                 </View>
 
-                <View style={styles.comentarios}>
-                    {this.props.infoPost.datos.comentarios.length === 0 ?
-                        <Text style={styles.comentarios}>Aún no hay comentarios</Text>
-                        :
-                        <FlatList
-                            data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
-                            keyExtractor={item => {
-                                return item.createdAt.toString()
-                            }}
-                            renderItem={({ item }) => <Text>{item.autor}: {item.text}</Text>}
-                        />
-                    }
+                <View style={styles.button}>
+                    <TouchableOpacity onPress={() => this.toggleComments()}>
+                        <Text style={styles.mostrarBorrar}>
+                            {this.state.showComments ? 'Esconder Comments' : 'Mostrar Comments'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {this.state.showComments &&
+                        (this.props.infoPost.datos.comentarios.length === 0 ?
+                            <Text style={styles.comentarios}>Aún no hay comentarios</Text>
+                            :
+                            <FlatList
+                                data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
+                                keyExtractor={item => {
+                                    return item.createdAt.toString()
+                                }}
+                                renderItem={({ item }) => <Text>{item.author}: {item.text}</Text>}
+                            />
+                        )}
+
                     <TextInput
                         keyboardType='default'
-                        placeholder='   Write a comment'
+                        placeholder='escribe aqui para comentar'
                         onChangeText={text => this.setState({ comentarios: text })}
                         value={this.state.comentarios}
                         style={styles.field}
@@ -163,42 +184,43 @@ class Post extends Component {
                     <Text style={styles.error}>{this.state.comentarioVacio}</Text>
 
                     <TouchableOpacity onPress={() => this.onSubmit()}>
-                        <Text style={styles.button}>Add comment</Text>
+                        <Text style={styles.button}>comentar</Text>
                     </TouchableOpacity>
 
                     {
                         this.props.infoPost.datos.owner == auth.currentUser.email ?
-                        <>
-                            <TouchableOpacity onPress={() => this.deleteMessage()}>
-                                <Text style={styles.deletebutton}>Delete post</Text>
-                            </TouchableOpacity>
+                            <>
+                                <TouchableOpacity onPress={() => this.deleteMessage()}>
+                                    <Text style={styles.deletebutton}>Borrar post?</Text>
+                                </TouchableOpacity>
 
-                             <Text style={styles.deleteMessage}>{this.state.deleteComment}</Text>
-                            {this.state.delete  ?
-                             <View style={styles.deleteContainer}>
-                                <TouchableOpacity onPress={() => this.deletePost()}>
-                                    <Text style={styles.confirmationButton}>Yes</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.notDelete()}>
-                                    <Text style={styles.denialButton}>No</Text>
-                                </TouchableOpacity>
-                             </View>
+                                <Text style={styles.deleteMessage}>{this.state.deleteComment}</Text>
+                                {this.state.delete ?
+                                    <View style={styles.deleteContainer}>
+                                        <TouchableOpacity onPress={() => this.deletePost()}>
+                                            <Text style={styles.confirmationButton}>si</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => this.notDelete()}>
+                                            <Text style={styles.denialButton}>no</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    :
+                                    <></>
+                                }
+                            </>
                             :
                             <></>
-                             }
-                        </>
-                        :
-                        <></>
                     }
-                    
-                    <Text style={styles.postedOn}> 
-                    Posted on {fecha}
+
+                    <Text style={styles.postedOn}>
+                        Posted on {fecha}
                     </Text>
-                    </View>
+                </View>
             </View>
         );
     }
 }
+
 
 const styles = StyleSheet.create({
     postContainer: {
@@ -225,17 +247,6 @@ const styles = StyleSheet.create({
         padding: '1%',
         color: 'rgb(153, 153, 153)',
         marginTop: '5%',
-    },
-    button: {
-        backgroundColor: 'rgb(0, 128, 0)',
-        borderRadius: '30px',
-        marginTop: '1%',
-        margin: '2%',
-        padding: '1%',
-        textAlign: 'center',
-        fontSize: 15,
-        color: 'white',
-        color: 'rgb(40, 40, 40)'
     },
     error: {
         color: 'red',
@@ -331,7 +342,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 8,
         borderColor: 'grey',
-        backgroundColor: 'rgb(0, 128, 0)',
+        backgroundColor: 'rgb(255, 165, 0)',
         borderWidth: 1,
         borderRadius: 4,
         textAlign: 'center',
@@ -345,6 +356,26 @@ const styles = StyleSheet.create({
         fontSize: 8,
         fontWeight: 'bold',
         color: 'black'
+    },
+    button: {
+        backgroundColor: 'rgb(255, 165, 0)',
+        borderRadius: '30px',
+        marginTop: '1%',
+        margin: '2%',
+        padding: '1%',
+        textAlign: 'center',
+        fontSize: 15,
+        color: 'white',
+        color: 'rgb(40, 40, 40)'
+    },
+    mostrarBorrar: {
+        borderRadius: '30px',
+        marginTop: '1%',
+        margin: '2%',
+        padding: '1%',
+        textAlign: 'center',
+        fontSize: 15,
+        color: 'green',
     },
 });
 

@@ -82,117 +82,108 @@ class Register extends Component {
           </View>
 
       )}else{
-        return(
-            <ImageBackground
-            source={require('../../../assets/fondo2.jpg')}
-                style={styles.background}
-                >
-            <View style={styles.formContainer}>
-
-                <Image source={require('../../../assets/elgato.jpg')}
-                resizeMode= 'contain'
-                style={styles.imageLogo}
-                />
-
-                <Text>Register</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text)=>this.setState({email: text})}
-                    placeholder='email'
-                    keyboardType='email-address'
-                    value={this.state.email}
-                    />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text)=>this.setState({userName: text})}
-                    placeholder='user name'
-                    keyboardType='default'
-                    value={this.state.userName}
-                    />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text)=>this.setState({password: text})}
-                    placeholder='password'
-                    keyboardType='default'
-                    secureTextEntry={true}
-                    value={this.state.password}
-                />
-                 <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({bio: text})}
-                    placeholder='Mini biografía (opcional)'
-                    keyboardType='default'
-                    value={this.state.bio}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({profileImage: text})}
-                    placeholder='URL de la foto de perfil (opcional)'
-                    keyboardType='default'
-                    value={this.state.profileImage}
-                />
-                   <TouchableOpacity
-                    style={[styles.button, { opacity: ButtonDisabled ? 0.5 : 1 }]}
-                    onPress={() => this.register(email, password, userName)}
-                    disabled={ButtonDisabled}
-                >
-                    <Text style={styles.textButton}>Registrarse</Text>
-                </TouchableOpacity>
-                <Text style={{ color: 'red' }}>{this.state.error}</Text>
-
-                <TouchableOpacity onPress={ () => this.props.navigation.navigate('Login')}>
-                   <Text>Ya tengo cuenta. Ir al login</Text>
-                </TouchableOpacity>
-
-            </View>
-            </ImageBackground>
-        )
-      }
-    }
+        return (
+          <View style={[styles.formContainer, { backgroundColor: 'orange' }]}>
+            <Image
+              source={require('../../../assets/elgato.jpg')}
+              resizeMode='contain'
+              style={styles.imageLogo}
+            />
+    
+            <Text style={{ color: '#fff' }}>Register</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => this.setState({ email: text })}
+              placeholder='email'
+              keyboardType='email-address'
+              value={this.state.email}
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => this.setState({ userName: text })}
+              placeholder='user name'
+              keyboardType='default'
+              value={this.state.userName}
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => this.setState({ password: text })}
+              placeholder='password'
+              keyboardType='default'
+              secureTextEntry={true}
+              value={this.state.password}
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => this.setState({ bio: text })}
+              placeholder='Mini biografía (opcional)'
+              keyboardType='default'
+              value={this.state.bio}
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => this.setState({ profileImage: text })}
+              placeholder='URL de la foto de perfil (opcional)'
+              keyboardType='default'
+              value={this.state.profileImage}
+            />
+            <TouchableOpacity
+              style={[styles.button, { opacity: ButtonDisabled ? 0.5 : 1 }]}
+              onPress={() => this.register(email, password, userName)}
+              disabled={ButtonDisabled}
+            >
+              <Text style={styles.textButton}>Registrarse</Text>
+            </TouchableOpacity>
+            <Text style={{ color: 'red' }}>{this.state.error}</Text>
+    
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+              <Text>Ya tengo cuenta. Ir al login</Text>
+            </TouchableOpacity>
+          </View>
+        );
+  }
 }
-
+}
 const styles = StyleSheet.create({
-    formContainer: {
-      paddingHorizontal: 20,
-      marginTop: 40,
-      alignItems: 'center',
-    },
-    input: {
-      height: 40,
-      width: '100%',
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-      borderWidth: 1,
-      borderColor: '#7289da', 
-      borderRadius: 8,
-      marginVertical: 15,
-      fontSize: 16,
-    },
-    button: {
-      backgroundColor: '#7289da',
-      width: '100%',
-      paddingVertical: 15,
-      textAlign: 'center',
-      borderRadius: 8,
-      marginTop: 20,
-    },
-    textButton: {
-      color: '#fff',
-      fontSize: 16,
-    },
-    background: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-      },
-    imageLogo: {
-      height: 100,
-      width: 100,
-      marginTop: 20,
-      borderRadius: 50,
-    },
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#rgb(40, 40, 40)',
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#rgb(40, 40, 40)',
+    borderRadius: 8,
+    marginVertical: 15,
+    fontSize: 16,
+    backgroundColor: '#fff',
+  },
+  button: {
+    backgroundColor: '#rgb(40, 40, 40)',
+    width: '100%',
+    paddingVertical: 15,
+    textAlign: 'center',
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  textButton: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  imageLogo: {
+    height: 100,
+    width: 100,
+    marginTop: 20,
+    borderRadius: 50,
+  },
 });
-
 
 export default Register;
