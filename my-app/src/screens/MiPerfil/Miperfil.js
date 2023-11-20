@@ -12,8 +12,8 @@ class MiPerfil extends Component {
             userPost: []
         }
     }
-
-componentDidMount(){
+    
+    componentDidMount(){
     auth.onAuthStateChanged( user => {
         if( user ){
             db.collection('users').where('owner', '==', auth.currentUser.email).onSnapshot(
@@ -36,35 +36,35 @@ componentDidMount(){
 
         db.collection('posts').where('owner', '==', auth.currentUser.email).onSnapshot(
             posteos => {
-                let publicaciones = [];
+                let posts = [];
                 posteos.forEach(post =>
-                    {publicaciones.push({
+                    {posts.push({
                         id: post.id,
                         datos: post.data()
                     })})
                 this.setState({
-                    userPost: publicaciones
+                    userPost: posts
                 })
                 
             }
         )
     }
+    )}
     
-    )
-  
-}
-render(){
+    
+    render(){
         return(
             <View style = {styles.container}>
-                
-                (<FlatList
+                {this.state.userInfo.length === 0?
+                <ActivityIndicator size='large' color='orange'/>
+                :
+                <FlatList
                 data = {this.state.userInfo}
                 keyExtractor={user => user.id}
-                renderItem = {({item}) => <User info={item} posteos={this.state.userPost} navigation={this.props.navigation}/>}/>)
+                renderItem = {({item}) => <User info={item} posteos={this.state.userPost} navigation={this.props.navigation}/>}/>}
             </View>
-)
-    
-}
+        )
+    }
 
 }
 

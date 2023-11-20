@@ -29,10 +29,10 @@ class User extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.foto}>
-                    {this.props.info.datos.foto === "" ?
+                    {this.props.info.datos.photoURL === "" ?
                     <Image style={styles.profile} source={{ uri: 'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png' }} />
                     :
-                    <Image style={styles.userEmail} source={{ uri: this.props.info.datos.foto }} />}
+                    <Image style={styles.userEmail} source={{ uri: this.props.info.datos.photoURL }} />}
                 </View>
                 <Text style={styles.usuario}>{this.props.info.datos.userName}</Text>
                 <Text style={styles.text}>{this.props.info.datos.owner}</Text>
@@ -47,7 +47,7 @@ class User extends Component {
                         renderItem={({ item }) => (
                             <View style={styles.postContainer}>
                                 <Image style={styles.camera} source={{ uri: item.datos.foto }} />
-                                <Text style={styles.text}>{item.datos.post}</Text>
+                                <Text style={styles.text}>{item.datos.textoPost}</Text>
                                 {this.props.info.datos.owner == auth.currentUser.email ?
                                     (<TouchableOpacity style={styles.button} onPress={() => this.borrarPost(item.id)}>
                                         <Text style={styles.textButton}>Borrar posteo</Text>

@@ -53,15 +53,14 @@ class OtroPerfil extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {this.state.userInfo.length === 0 ? (
-                    <Text>No se encontraron resultados.</Text>
-                ) : (
-                    <FlatList
-                        data={this.state.userInfo}
-                        keyExtractor={(user) => user.id}
-                        renderItem={({ item }) => <User info={item} posteos={this.state.userPost} />}
-                    />
-                )}
+                {this.state.userInfo.length === 0 ?
+                (<ActivityIndicator size='large' color='orange'/>)
+                :
+                <FlatList
+                    data={this.state.userInfo}
+                    keyExtractor={(user) => user.id}
+                    renderItem={({ item }) => <User info={item} posteos={this.state.userPost} />}
+                />}
             </View>
         );
     }
