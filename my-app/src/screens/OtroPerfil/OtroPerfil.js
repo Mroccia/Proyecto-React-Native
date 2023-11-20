@@ -8,16 +8,17 @@ class OtroPerfil extends Component {
     constructor(){
         super();
         this.state = 
-        {infoUsuario: [],
-        postUsuario: []
-    
-    }
-    }
+        {userInfo: [],
+            userPost: []
+        }
+}
 
 componentDidMount(){
     auth.onAuthStateChanged( user => {
         if( user ){
-            db.collection('users').where('owner', '==',this.props.route.params.owner).onSnapshot(
+            db.collection('users')
+            .where('owner', '==',this.props.route.params.owner)
+            .onSnapshot(
                 usuarios => {
                     let users = [];
                     usuarios.forEach(user =>
@@ -27,9 +28,11 @@ componentDidMount(){
                         })})
                 
                 this.setState({
-                    infoUsuario: users
+                    userInfo: users
                 })
-                db.collection('posts').where('owner', '==', this.props.route.params.owner).onSnapshot(
+                db.collection('posts')
+                .where('owner', '==', this.props.route.params.owner)
+                .onSnapshot(
                     posteos => {
                         let publicaciones = [];
                         posteos.forEach(post =>
@@ -38,7 +41,7 @@ componentDidMount(){
                                 datos: post.data()
                             })})
                         this.setState({
-                            postUsuario: publicaciones
+                            userPost: publicaciones
                         })
                     }
                 )
@@ -48,9 +51,6 @@ componentDidMount(){
             this.props.navigation.navigate('Login')
         }
 
-        
-        
-  
     }
     
     )
@@ -59,12 +59,12 @@ componentDidMount(){
 render(){
         return(
             <View style = {styles.container}>
-                {this.state.infoUsuario.length === 0?
-                (<ActivityIndicator size='large' color='pink'/>):
+                {this.state.userInfo.length === 0?
+                (<ActivityIndicator size='large' color='orange'/>):
                 (<FlatList
-                data = {this.state.infoUsuario}
+                data = {this.state.userInfo}
                 keyExtractor={user => user.id}
-                renderItem = {({item}) => <User info = {item} posteos = {this.state.postUsuario}/>}/>)}
+                renderItem = {({item}) => <User info = {item} posteos = {this.state.userPost}/>}/>)}
             </View>
 )
     
@@ -79,6 +79,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
     },
-  });
+});
 
 export default OtroPerfil;
