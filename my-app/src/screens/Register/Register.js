@@ -10,7 +10,7 @@ class Register extends Component {
       userName:'',
       password:'',
       bio: '', 
-      profileImage: '',
+      foto: '',
       cargando: true,
       error: ''
     }
@@ -29,7 +29,7 @@ class Register extends Component {
     } )
   }
 
-  register(email, pass, userName, bio, profileImage) {
+  register(email, pass, userName, bio, foto) {
     this.setState({
       error: ''
     })
@@ -49,7 +49,7 @@ class Register extends Component {
           owner: auth.currentUser.email,
           userName: userName,
           bio: bio, 
-          profileImage: profileImage,
+          foto: foto,
           createdAt: Date.now(),
         })
         .then(res => {
@@ -122,10 +122,10 @@ class Register extends Component {
             />
             <TextInput
               style={styles.input}
-              onChangeText={(text) => this.setState({ profileImage: text })}
+              onChangeText={(text) => this.setState({ foto: text })}
               placeholder='URL de la foto de perfil (opcional)'
               keyboardType='default'
-              value={this.state.profileImage}
+              value={this.state.foto}
             />
             <TouchableOpacity
               style={[styles.button, { opacity: ButtonDisabled ? 0.5 : 1 }]}

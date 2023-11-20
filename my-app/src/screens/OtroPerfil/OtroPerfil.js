@@ -7,8 +7,8 @@ import User from '../../components/User/User';
 class OtroPerfil extends Component {
     constructor(){
         super();
-        this.state = 
-        {userInfo: [],
+        this.state = {
+            userInfo: [],
             userPost: []
         }
 }

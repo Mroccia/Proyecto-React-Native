@@ -213,7 +213,7 @@ class Post extends Component {
                     }
 
                     <Text style={styles.postedOn}>
-                        Posted on {fecha}
+                        Publicado el {fecha}
                     </Text>
                 </View>
             </View>
