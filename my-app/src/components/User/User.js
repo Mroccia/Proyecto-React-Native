@@ -28,14 +28,16 @@ class User extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.profileImage}>
-                    {this.props.info.datos.profileImage === "" ? <Image style={styles.profile} source={{ uri: 'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png' }} /> :
-                        <Image style={styles.userEmail} source={{ uri: this.props.info.datos.profileImage }} />}
+                <View style={styles.foto}>
+                    {this.props.info.datos.foto === "" ?
+                    <Image style={styles.profile} source={{ uri: 'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png' }} />
+                    :
+                    <Image style={styles.userEmail} source={{ uri: this.props.info.datos.foto }} />}
                 </View>
                 <Text style={styles.usuario}>{this.props.info.datos.userName}</Text>
                 <Text style={styles.text}>{this.props.info.datos.owner}</Text>
-                {this.props.info.datos.miniBio === "" ?
-                    "" : <Text style={styles.text}>{this.props.info.datos.miniBio}</Text>}
+                {this.props.info.datos.bio === "" ?
+                    "" : <Text style={styles.text}>{this.props.info.datos.bio}</Text>}
                 <Text style={styles.text}>{this.props.posteos.length} posteos</Text>
                 {this.props.posteos.length === 0 ?
                     "" :

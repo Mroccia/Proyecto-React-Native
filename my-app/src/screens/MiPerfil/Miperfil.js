@@ -7,11 +7,10 @@ import User from '../../components/User/User';
 class MiPerfil extends Component {
     constructor(){
         super();
-        this.state = 
-        {userInfo: [],
-        userPost: []
-    
-    }
+        this.state = {
+            userInfo: [],
+            userPost: []
+        }
     }
 
 componentDidMount(){
@@ -29,7 +28,6 @@ componentDidMount(){
                 this.setState({
                     userInfo: users
                 })
-                console.log("User data:", user);
             }
             )
         } else{
@@ -50,8 +48,6 @@ componentDidMount(){
                 
             }
         )
-        
-  
     }
     
     )
@@ -60,12 +56,11 @@ componentDidMount(){
 render(){
         return(
             <View style = {styles.container}>
-                {this.state.userInfo.length === 0?
-                (<ActivityIndicator size='large' color='orange'/>):
+                
                 (<FlatList
                 data = {this.state.userInfo}
                 keyExtractor={user => user.id}
-                renderItem = {({item}) => <User info={item} posteos={this.state.userPost} navigation={this.props.navigation}/>}/>)}
+                renderItem = {({item}) => <User info={item} posteos={this.state.userPost} navigation={this.props.navigation}/>}/>)
             </View>
 )
     
