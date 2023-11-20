@@ -32,15 +32,15 @@ class OtroPerfil extends Component {
                         db.collection('posts')
                             .where('owner', '==', this.props.route.params.owner)
                             .onSnapshot((posteos) => {
-                                let publicaciones = [];
+                                let posts = [];
                                 posteos.forEach((post) => {
-                                    publicaciones.push({
+                                    posts.push({
                                         id: post.id,
                                         datos: post.data()
                                     });
                                 });
                                 this.setState({
-                                    userPost: publicaciones
+                                    userPost: posts
                                 });
                             });
                     });

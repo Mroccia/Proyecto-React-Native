@@ -29,10 +29,9 @@ class User extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.foto}>
-                    {this.props.info.datos.photoURL === "" ?
-                    <Image style={styles.profile} source={{ uri: 'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png' }} />
-                    :
-                    <Image style={styles.userEmail} source={{ uri: this.props.info.datos.photoURL }} />}
+                    
+                    <Image style={styles.profileImage} source={require('../../../assets/perfil-de-usuario.webp')} />
+                    
                 </View>
                 <Text style={styles.usuario}>{this.props.info.datos.userName}</Text>
                 <Text style={styles.text}>{this.props.info.datos.owner}</Text>
