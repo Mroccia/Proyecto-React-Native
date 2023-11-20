@@ -3,11 +3,15 @@ import { TouchableOpacity, View, Text, FlatList, Image, StyleSheet } from 'react
 import { auth, db } from '../../firebase/config';
 
 class User extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            estado: ""
-        }
+
+    borrarPost(id) {
+        db.collection('posts').doc(id).delete()
+            .then(() => {
+                console.log("Se borro bien")
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     logOut() {
@@ -15,23 +19,11 @@ class User extends Component {
         this.props.navigation.navigate('Login');
     }
 
-    borrarPost(id) {
-        db.collection('posts').doc(id).delete()
-            .then(() => {
-                console.log("Post eliminado")
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.foto}>
-                    
-                    <Image style={styles.profileImage} source={require('../../../assets/perfil-de-usuario.webp')} />
-                    
+                    <Image style={styles.profileImage} source={require('../../../assets/perfil-de-usuario.webp')} />  
                 </View>
                 <Text style={styles.usuario}>{this.props.info.datos.userName}</Text>
                 <Text style={styles.text}>{this.props.info.datos.owner}</Text>
@@ -40,7 +32,7 @@ class User extends Component {
                 <Text style={styles.text}>{this.props.posteos.length} posteos</Text>
                 {this.props.posteos.length === 0 ?
                     "" :
-                    (<FlatList
+                    <FlatList
                         data={this.props.posteos}
                         keyExtractor={(post) => post.id}
                         renderItem={({ item }) => (
@@ -48,20 +40,17 @@ class User extends Component {
                                 <Image style={styles.camera} source={{ uri: item.datos.foto }} />
                                 <Text style={styles.text}>{item.datos.textoPost}</Text>
                                 {this.props.info.datos.owner == auth.currentUser.email ?
-                                    (<TouchableOpacity style={styles.button} onPress={() => this.borrarPost(item.id)}>
+                                    <TouchableOpacity style={styles.button} onPress={() => this.borrarPost(item.id)}>
                                         <Text style={styles.textButton}>Borrar posteo</Text>
-                                    </TouchableOpacity>) : ""}
+                                    </TouchableOpacity> : ""}
                             </View>
-                        )} />)}
+                        )} />}
                 {this.props.info.datos.owner == auth.currentUser.email ?
-                    (<TouchableOpacity style={styles.logoutButton} onPress={() => this.logOut()}>
+                    <TouchableOpacity style={styles.logoutButton} onPress={() => this.logOut()}>
                         <Text style={styles.text}>Salir</Text>
-                    </TouchableOpacity>
-                    ) 
-                    
-                    
-                    
-                    : ""}
+                    </TouchableOpacity> 
+                    : 
+                    ""}
             </View>
         )
     }
