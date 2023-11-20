@@ -46,7 +46,6 @@ class Home extends Component {
         return(
             <ScrollView style={styles.containerHome}>
                 <View style={styles.container}>
-                    <Image style={styles.img} source={require('../../../assets/fondo.jpg')} resizeMode='contain'/>
                     <Text>Your best Burger</Text>
                     <Text>Lista de Posts</Text>
                 </View>
