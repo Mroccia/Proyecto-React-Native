@@ -58,12 +58,6 @@ class User extends Component {
                     (<TouchableOpacity style={styles.logoutButton} onPress={() => this.logOut()}>
                         <Text style={styles.text}>Salir</Text>
                     </TouchableOpacity>
-                    ) (
-                        <TouchableOpacity style={styles.logoutButton} onPress={() => this.props.navigation.navigate('Contra')}>
-                        <Text style={styles.text}>Cambiar contraseña</Text>
-                    </TouchableOpacity>
-                    
-                    
                     ) 
                     
                     
