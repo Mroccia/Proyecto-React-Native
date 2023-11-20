@@ -55,7 +55,18 @@ class User extends Component {
                 {this.props.info.datos.owner == auth.currentUser.email ?
                     (<TouchableOpacity style={styles.logoutButton} onPress={() => this.logOut()}>
                         <Text style={styles.text}>Salir</Text>
-                    </TouchableOpacity>) : ""}
+                    </TouchableOpacity>
+                    ) (
+                        <TouchableOpacity style={styles.logoutButton} onPress={() => this.props.navigation.navigate('Contra')}>
+                        <Text style={styles.text}>Cambiar contraseña</Text>
+                    </TouchableOpacity>
+                    
+                    
+                    ) 
+                    
+                    
+                    
+                    : ""}
             </View>
         )
     }
