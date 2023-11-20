@@ -24,45 +24,45 @@ class Post extends Component {
         }
     }
 
-    async likear() {
-        try {
-            await db.collection('posts').doc(this.props.infoPost.id).update({
-                likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email),
-            });
+    likear(){
+        db.collection('posts').doc(this.props.infoPost.id)
+        .update({
+            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+        })
+        .then( res => {
             this.setState({
                 mg: true,
-                cantidadDeLikes: this.state.cantidadDeLikes + 1,
-            });
-        } catch (error) {
-            console.log('Error en likear:', error);
-        }
+                cantidadDeLikes: this.state.cantidadDeLikes + 1
+            })
+        })
+        .catch( e => console.log(e))
     }
 
-    async disLike() {
-        try {
-            await db.collection('posts').doc(this.props.infoPost.id).update({
-                likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email),
-            });
+    disLike(){
+        db.collection('posts').doc(this.props.infoPost.id)
+        .update({
+            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+        })
+        .then( res => {
             this.setState({
                 mg: false,
-                cantidadDeLikes: this.state.cantidadDeLikes - 1,
-            });
-        } catch (error) {
-            console.log('Error en disLike:', error);
-        }
+                cantidadDeLikes: this.state.cantidadDeLikes - 1
+            })
+        })
+        .catch( e => console.log(e))
     }
 
     onSubmit() {
-        if (this.state.comentarios === '') {
-            this.setState({ comentarioVacio: 'Necesitas escribir algo' });
-        } else {
+        this.state.comentarios == '' ?
+            this.setState({ comentarioVacio: 'Necesitas escribir algo' })
+            :
             db.collection('posts')
                 .doc(this.props.infoPost.id)
                 .update({
                     comentarios: firebase.firestore.FieldValue.arrayUnion({
                         owner: auth.currentUser.email,
                         text: this.state.comentarios,
-                        author: auth.currentUser.email,
+                        autor: auth.currentUser.email,
                         createdAt: Date.now(),
                     }),
                 })
@@ -74,13 +74,8 @@ class Post extends Component {
                 .catch((error) => {
                     console.log('Error en onSubmit:', error);
                 });
-        }
     }
-
-    irPerfil(user) {
-        this.props.navigation.navigate("OtroPerfil", { user: user })
-    }
-
+    
     deleteMessage(){
         this.setState({deleteMessage: 'Estas seguro de borrar el post?', delete: true})
     }
@@ -109,22 +104,22 @@ class Post extends Component {
     }
 
     render() {
-        const date = this.props.infoPost.datos.createdAt
-
-        const d = Date(date);
-
-        const fecha = d.toString()
+        const date = Date(this.props.infoPost.datos.createdAt)
+        const fecha = date.toString()
     
         return (
             <View style={styles.postContainer}>
-                <TouchableOpacity onPress={() => {if (this.props.infoPost.datos.owner == auth.currentUser.email){
-                        this.props.navigation.navigate("MiPerfil")
-                    }else{
-                        this.props.navigation.navigate('OtroPerfil', {owner: this.props.infoPost.datos.owner})
-                    }}
-                       }>
-                        <Text style = {styles.usuario}>{this.props.infoPost.datos.owner}</Text>
-                </TouchableOpacity>
+                <View style={styles.deleteContainer}>
+                    {this.props.infoPost.datos.owner == auth.currentUser.email?
+                        <Text onPress={() => this.props.navigation.navigate("MiPerfil")} style={styles.nameOne}>
+                            {this.props.infoPost.datos.owner}
+                        </Text>
+                        :
+                        <Text onPress={() => this.props.navigation.navigate("OtroPerfil", {owner: this.props.infoPost.datos.owner})} style={styles.nameOne}>
+                            {this.props.infoPost.datos.owner}
+                        </Text>
+                    }
+                </View>
                 <Image style={styles.img} source={{ uri: this.props.infoPost.datos.foto }} />
                 <Text style={styles.bio}>
                     {this.props.infoPost.datos.post}  
@@ -152,10 +147,9 @@ class Post extends Component {
                         <FlatList
                             data={this.props.infoPost.datos.comentarios.sort((a, b) => a.createdAt - b.createdAt)}
                             keyExtractor={item => {
-
                                 return item.createdAt.toString()
                             }}
-                            renderItem={({ item }) => <Text>{item.author}: {item.text}</Text>}
+                            renderItem={({ item }) => <Text>{item.autor}: {item.text}</Text>}
                         />
                     }
                     <TextInput
@@ -259,7 +253,7 @@ const styles = StyleSheet.create({
         margin: 10
     },
     postedOn: {
-        color: '#999994',
+        color: 'black',
         fontSize: 15,
         margin: 5
     },

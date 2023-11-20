@@ -75,7 +75,7 @@ render() {
                         keyExtractor={(user, index) => user.id + index}
                         renderItem={({ item }) => (
                             <View style={styles.results}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Perfil', { owner: item.datos.owner })}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('OtroPerfil', {owner: item.datos.owner})}>
                                     <Text>{item.datos.owner} - {item.datos.email}</Text>
                                 </TouchableOpacity>
                             </View>

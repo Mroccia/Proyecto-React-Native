@@ -29,7 +29,7 @@ render(){
     return(
         <View style = {styles.container}>
             <View style= {styles.photoContainer}>
-            {this.props.info.datos.profileImage === "" ? <Image style = {styles.profile} source = {{uri: 'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}}/> :
+            {this.props.info.datos.profileImage === "" ? <Image style = {styles.profile}  source={require('../../../assets/perfil-de-usuario.webp')}/> :
             <Image style={styles.profile}  source = {{uri: this.props.info.datos.profileImage}}/> }
             </View>
             <Text style = {styles.usuario}>{this.props.info.datos.userName}</Text>
